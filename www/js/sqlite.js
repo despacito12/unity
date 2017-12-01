@@ -181,16 +181,16 @@ setState({
   contacts: [
     {
       key: 1,
-      name: "Waka waka",
-      email: "waka@flaka.com",
-      description: "Front-end Developer"
+      name: "dj my loves",
+      email: "dj@gmail.com",
+      description: "Pogi talaga"
     }, {
       key: 2,
-      name: "SizzleBacon",
-      email: "bacon@shizzle.com"
+      name: "Sapnu puas",
+      email: "sapnu.com"
     }, {
       key: 3,
-      name: "FriedBacon"
+      name: "Joan"
     },
   ],
   newContact: Object.assign({}, CONTACT_TEMPLATE),
