@@ -1,18 +1,163 @@
-body {
-  padding: 40px 20% 20px 10%;
-  background-color: #9CD394;
+@font-face {
+    font-family: kazooba;
+    src: url(https://rawgit.com/TheOmegaBlack/FreeCodeCampStuff/master/JavascriptCalculator/arcadeclassic.regular.ttf)
 }
-h1 {
-  padding: 20px 0;
-  font-size: 2.5em;
-  text-align: center;
+
+* {
+    box-sizing: border-box;
 }
-.table, .form-inline {
-  margin-top: 20px;
+
+body
+{
+    background-color: #7EABEE;
+    /*background-color : RGBA(10, 10, 10, 0.9) !important;*/
 }
-input {
-  margin: 0 12px 0 0;
+
+.calculator-ext
+{
+    height : 430px;
+    width : 310px;
+    background-color : RGBA(255, 255, 255, 0.90);
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    border : 3px solid;
+    border-radius: 10px;
+    border-color : gray;
+    box-shadow: 0 0 20px white;
 }
-.container {
-    background: rgba(255, 255, 255, 0.65);
+
+.calculator-top-div
+{
+    font-family : kazooba;
+    text-align : center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+}
+
+
+.calculator-int
+{
+    height : 380px;
+    width : 280px;
+    background-color : #FF4136;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    margin-top: auto;
+    border-color : gray;
+    border : 1px solid;
+    overflow: auto;
+}
+
+.text-box
+{
+    margin-left: auto;
+    margin-right : auto;
+    margin-top: 20px;
+    background-color : #cce6ff;
+    height : 60px;
+    width: 240px;
+    border-color : black;
+    border: 2px solid;
+    border-radius : 5px;
+    line-height: 1;
+}
+
+.display-up
+{
+    height : 35px;
+    width: 236px;
+    border: 0 hidden;
+    background-color : #cce6ff;
+    margin-left: auto;
+    margin-right : auto;
+    border-radius : 10px;
+    font-family: kazooba;
+    text-align: right;
+    font-size: 40px;
+    padding-top: 5px;
+}
+
+.display-down
+{
+    height : 16px;
+    width: 236px;
+    border: 0 hidden;
+    background-color : #cce6ff;
+    margin-left: auto;
+    margin-right : auto;
+    border-radius : 0 0 10px 10px;
+    font-family: kazooba;
+    font-size: 20px;
+    text-align: right;
+    padding-top: 3px;
+}
+
+.button-box
+{
+    margin-left: auto;
+    margin-right : auto;
+    margin-top: 10px;
+    background-color : #FFF;
+    height : 270px;
+    width: 240px;
+    border-color : black;
+    border: 2px solid;
+    border-radius : 5px;
+}
+
+.number-btn
+{
+    margin-top:  7px;
+    margin-left : 7px;
+    height: 50px;
+    width: 50px;
+    border-color: black;
+    border-radius: 5px;
+    border: 0 solid;
+    box-shadow: 0 2px #999;
+}
+
+.number-btn:active
+{
+  transform: translateY(1px);
+  box-shadow: 0 1px #AAA;
+}
+
+.number-btn:hover
+{
+    background-color: #BBB;
+}
+
+button:focus
+{
+    outline: none !important;
+}
+
+.clear-btn
+{
+    margin-top:  5px;
+    margin-left : 6px;
+    height: 25px;
+    width: 109px;
+    font-weight: bold;
+    background-color: #F87217;
+    border-radius: 5px;
+    border: 0 solid;
+    box-shadow: 0 2px #999;
+}
+
+.clear-btn:hover
+{
+    background-color: #E67010;
+}
+
+.clear-btn:active
+{
+  transform: translateY(1px);
+  box-shadow: 0 1px #AAA;
 }
