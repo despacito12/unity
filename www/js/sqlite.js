@@ -1,197 +1,207 @@
-/*
-Components
-*/
-var ContactItem = React.createClass({
-  propTypes: {
-    name: React.PropTypes.string.isRequired,
-    email: React.PropTypes.string.isRequired,
-    description: React.PropTypes.string,
-  },
-  render: function() {
-    return (
-      React.createElement('li', {
-          className: 'ContactItem'
-        },
-        React.createElement('h2', {
-          className: 'ContactItem-name'
-        }, this.props.name),
-        React.createElement('a', {
-            className: 'ContactItem-email',
-            href: 'mailto:' + this.props.email
-          },
-          this.props.email
-        ),
-        React.createElement('p', {
-          className: 'ContactItem-description'
-        }, this.props.description)
-      )
-    );
-  },
-});
+"use strict";
 
-var ContactForm = React.createClass({
-  propTypes: {
-    contacts: React.PropTypes.array.isRequired,
-    contact: React.PropTypes.object.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
+var ee = new EventEmitter();
+var App = React.createClass({
+  displayName: "App",
+  render: function render() {
+    return React.createElement(
+      "main",
+      { className: "react-calculator" },
+      React.createElement(InputField, null),
+      React.createElement(TotalRecall, null),
+      React.createElement(ButtonSetNumbers, null),
+      React.createElement(ButtonSetFunctions, null),
+      React.createElement(ButtonSetEquations, null)
+    );
+  }
+});
+var Button = React.createClass({
+  displayName: "Button",
+  _handleClick: function _handleClick() {
+    var text = this.props.text,
+        cb = this.props.clickHandler;
+
+    if (cb) {
+      cb.call(null, text);
+    }
   },
-  onNameInput: function(e) {
-    this.props.onChange(Object.assign({}, this.props.contact, { name: e.target.value }));
-  },
-  onEmailInput: function(e) {
-    this.props.onChange(Object.assign({}, this.props.contact, { email: e.target.value }));
-  },
-  onDescriptionInput: function(e) {
-    this.props.onChange(Object.assign({}, this.props.contact, { description: e.target.value }));
-  },
-  onSubmitForm: function(e) {
-    e.preventDefault();
-    this.props.onSubmit();
-  },
-  render: function() {
-    var errors = this.props.contact.errors || {};
-    return (
-      React.createElement('form', {
-          onSubmit: this.onSubmitForm,
-          className: "ContactForm",
-          noValidate: true,
-        },
-        React.createElement('input', {
-          type: 'text',
-          value: this.props.contact.name,
-          className: errors.name && "ContactForm-error",
-          placeholder: 'Name (required)',
-          onChange: this.onNameInput,
-        }),
-        React.createElement('input', {
-          type: 'email',
-          value: this.props.contact.email,
-          className: errors.email && "ContactForm-error",
-          placeholder: 'Email',
-          onChange: this.onEmailInput,
-        }),
-        React.createElement('textarea', {
-          value: this.props.contact.description,
-          placeholder: 'Description',
-          onChange: this.onDescriptionInput,
-        }),
-        React.createElement('button', {
-          type: 'submit'
-        }, 'Add Contact')
+  render: function render() {
+    return React.createElement(
+      "button",
+      { className: this.props.klass, onClick: this._handleClick },
+      React.createElement(
+        "span",
+        { className: "title" },
+        this.props.text
       )
     );
   }
 });
+var ContentEditable = React.createClass({
+  displayName: "ContentEditable",
+  _handleClick: function _handleClick() {
+    var cb = this.props.clickHandler;
 
-var ContactView = React.createClass({
-  propTypes: {
-    contacts: React.PropTypes.array.isRequired,
-    newContact: React.PropTypes.object.isRequired,
-    onNewContactChange: React.PropTypes.func.isRequired,
-    onNewContactSubmit: React.PropTypes.func.isRequired,
+    if (cb) {
+      cb.call(this);
+    }
   },
+  render: function render() {
+    return React.createElement(
+      "div",
+      { className: "editable-field", contentEditable: this.props.initEdit, spellcheck: this.props.spellCheck, onClick: this._handleClick },
+      this.props.text
+    );
+  }
+});
 
-  render: function() {
-    var contactItemElements = this.props.contacts
-      .filter(function(contact) {
-        return contact.email;
+var InputField = React.createClass({
+  displayName: "InputField",
+  _updateField: function _updateField(newStr) {
+    newStr = newStr.split ? newStr.split(' ').reverse().join(' ') : newStr;
+    return this.setState({ text: newStr });
+  },
+  getInitialState: function getInitialState() {
+    this.props.text = this.props.text || '0';
+
+    return { text: this.props.text };
+  },
+  componentWillMount: function componentWillMount() {
+    ee.addListener('numberCruncher', this._updateField);
+  },
+  render: function render() {
+    return React.createElement(ContentEditable, { text: this.state.text, initEdit: "false", spellcheck: "false", clickHandler: this._clickBait });
+  }
+});
+var TotalRecall = React.createClass({
+  displayName: "TotalRecall",
+  _toggleMemories: function _toggleMemories() {
+    this.setState({ show: !this.state.show });
+  },
+  _recallMemory: function _recallMemory(memory) {
+    store.newInput = memory;
+    ee.emitEvent('toggle-memories');
+  },
+  getInitialState: function getInitialState() {
+    return { show: false };
+  },
+  componentWillMount: function componentWillMount() {
+    ee.addListener('toggle-memories', this._toggleMemories);
+  },
+  render: function render() {
+    var _this = this;
+
+    var classNames = "memory-bank " + (this.state.show ? 'visible' : '');
+
+    return React.createElement(
+      "section",
+      { className: classNames },
+      React.createElement(Button, { text: "+", clickHandler: this._toggleMemories, klass: "toggle-close" }),
+      store.curMemories.map(function (mem) {
+        return React.createElement(Button, { klass: "block memory transparent", text: mem, clickHandler: _this._recallMemory });
       })
-      .map(function(contact) {
-        return React.createElement(ContactItem, contact);
-      });
-    return (
-      React.createElement('div', {},
-        React.createElement('h1', {
-          className: "ContactView-title"
-        }, "Contacts"),
-        React.createElement('ul', {
-          className: "ContactView-list"
-        }, contactItemElements),
-        React.createElement(ContactForm, {
-          contacts: this.props.contacts,
-          contact: this.props.newContact,
-          onChange: this.props.onNewContactChange,
-          onSubmit: this.props.onNewContactSubmit,
-        })
-      )
+    );
+  }
+});
+var ButtonSetFunctions = React.createClass({
+  displayName: "ButtonSetFunctions",
+  _showMemoryBank: function _showMemoryBank() {
+    ee.emitEvent('toggle-memories');
+  },
+  _clear: function _clear() {
+    store.newInput = 0;
+  },
+  _contentClear: function _contentClear() {
+    var curInput = String(store.curInput),
+        lessOne = curInput.substring(0, curInput.length - 1);
+
+    return store.newInput = lessOne === '' ? 0 : lessOne;
+  },
+  render: function render() {
+    return React.createElement(
+      "section",
+      { className: "button-set--functions" },
+      React.createElement(Button, { klass: "long-text", text: "recall", clickHandler: this._showMemoryBank }),
+      React.createElement(Button, { klass: "long-text", text: "clear", clickHandler: this._clear }),
+      React.createElement(Button, { text: "←", clickHandler: this._contentClear })
+    );
+  }
+});
+var ButtonSetEquations = React.createClass({
+  displayName: "ButtonSetEquations",
+  _eq: function _eq(type) {
+    store.newInput = store.curInput + " " + type + " ";
+  },
+  _equate: function _equate() {
+    store.newInput = eval(store.curInput);
+  },
+  render: function render() {
+    return React.createElement(
+      "section",
+      { className: "button-set--equations" },
+      React.createElement(Button, { text: "+", clickHandler: this._eq }),
+      React.createElement(Button, { text: "-", clickHandler: this._eq }),
+      React.createElement(Button, { text: "*", clickHandler: this._eq }),
+      React.createElement(Button, { text: "/", clickHandler: this._eq }),
+      React.createElement(Button, { text: "=", clickHandler: this._equate })
+    );
+  }
+});
+var ButtonSetNumbers = React.createClass({
+  displayName: "ButtonSetNumbers",
+  _number: function _number(num) {
+    if (!store.curInput) {
+      return store.newInput = num;
+    }
+
+    return store.newInput = "" + store.curInput + num;
+  },
+  render: function render() {
+    return React.createElement(
+      "section",
+      { className: "button-set--numbers" },
+      React.createElement(Button, { text: "1", clickHandler: this._number }),
+      React.createElement(Button, { text: "2", clickHandler: this._number }),
+      React.createElement(Button, { text: "3", clickHandler: this._number }),
+      React.createElement(Button, { text: "4", clickHandler: this._number }),
+      React.createElement(Button, { text: "5", clickHandler: this._number }),
+      React.createElement(Button, { text: "6", clickHandler: this._number }),
+      React.createElement(Button, { text: "7", clickHandler: this._number }),
+      React.createElement(Button, { text: "8", clickHandler: this._number }),
+      React.createElement(Button, { text: "9", clickHandler: this._number }),
+      React.createElement(Button, { text: "0", clickHandler: this._number })
     );
   }
 });
 
-/*
-Actions
-*/
+var store = {
+  input: 0,
+  memory: [],
+  get curInput() {
+    return this.input;
+  },
 
-function updateNewContact(contact) {
-  setState({
-    newContact: contact
-  });
-}
+  get curMemories() {
+    return this.memory.filter(function (m) {
+      return m !== undefined;
+    });
+  },
 
-function submitNewContact() {
-  var contact = Object.assign({}, state.newContact, {key: state.contacts.length + 1, errors: {}});
-  
-  if (!contact.name) {
-    contact.errors.name = ["Please enter a name"];
+  set commitMemory(input) {
+    this.memory.push(input);
+  },
+
+  set newInput(str) {
+    var curInput = str,
+        oldInput = this.curInput;
+
+    if (this.curMemories.indexOf(oldInput) === -1) {
+      this.commitMemory = oldInput;
+    }
+
+    this.input = curInput;
+    ee.emitEvent('numberCruncher', [this.curInput]);
   }
-  if(! /.+@.+\..+/.test(contact.email)) {
-    contact.errors.email = ["Please enter a valid email address."];
-  }
-  setState(
-    Object.keys(contact.errors).length === 0 
-    ? {
-      newContact: Object.assign({}, CONTACT_TEMPLATE),
-      contacts: state.contacts.slice(0).concat(contact),
-    } : {
-      newContact: contact,
-    } 
-  );
-}
+};
 
-/*
-Constants
-*/
-
-var CONTACT_TEMPLATE = { name: "", email: "", description: "", errors: null };
-
-/*
-Model
-*/
-
-var state = {};
-
-function setState(changes) {
-  Object.assign(state, changes);
-
-  ReactDOM.render(
-    React.createElement(ContactView, Object.assign({}, state, {
-      onNewContactChange: updateNewContact,
-      onNewContactSubmit: submitNewContact,
-    })),
-    document.getElementById('react-app')
-  );
-}
-
-/*
-Setting initial data
-*/
-
-setState({
-  contacts: [
-    {
-      key: 1,
-      name: "Waka waka",
-      email: "waka@flaka.com",
-      description: "Front-end Developer"
-    }, {
-      key: 2,
-      name: "SizzleBacon",
-      email: "bacon@shizzle.com"
-    }, {
-      key: 3,
-      name: "FriedBacon"
-    },
-  ],
-  newContact: Object.assign({}, CONTACT_TEMPLATE),
-});
+React.render(React.createElement(App, null), document.querySelector('body'));
