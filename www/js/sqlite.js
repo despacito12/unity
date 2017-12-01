@@ -1,207 +1,267 @@
 "use strict";
 
-var ee = new EventEmitter();
-var App = React.createClass({
-  displayName: "App",
-  render: function render() {
-    return React.createElement(
-      "main",
-      { className: "react-calculator" },
-      React.createElement(InputField, null),
-      React.createElement(TotalRecall, null),
-      React.createElement(ButtonSetNumbers, null),
-      React.createElement(ButtonSetFunctions, null),
-      React.createElement(ButtonSetEquations, null)
-    );
-  }
-});
-var Button = React.createClass({
-  displayName: "Button",
-  _handleClick: function _handleClick() {
-    var text = this.props.text,
-        cb = this.props.clickHandler;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    if (cb) {
-      cb.call(null, text);
-    }
-  },
-  render: function render() {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ContactRow = function (_React$Component) {
+  _inherits(ContactRow, _React$Component);
+
+  function ContactRow() {
+    _classCallCheck(this, ContactRow);
+
+    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
+  }
+
+  ContactRow.prototype.render = function render() {
     return React.createElement(
-      "button",
-      { className: this.props.klass, onClick: this._handleClick },
+      "tr",
+      null,
       React.createElement(
-        "span",
-        { className: "title" },
-        this.props.text
+        "td",
+        null,
+        this.props.contact.name
+      ),
+      React.createElement(
+        "td",
+        null,
+        this.props.contact.phone
+      ),
+      React.createElement(
+        "td",
+        null,
+        this.props.contact.email
       )
     );
-  }
-});
-var ContentEditable = React.createClass({
-  displayName: "ContentEditable",
-  _handleClick: function _handleClick() {
-    var cb = this.props.clickHandler;
+  };
 
-    if (cb) {
-      cb.call(this);
-    }
-  },
-  render: function render() {
+  return ContactRow;
+}(React.Component);
+
+var ContactTable = function (_React$Component2) {
+  _inherits(ContactTable, _React$Component2);
+
+  function ContactTable() {
+    _classCallCheck(this, ContactTable);
+
+    return _possibleConstructorReturn(this, _React$Component2.apply(this, arguments));
+  }
+
+  ContactTable.prototype.render = function render() {
+    var _this3 = this;
+
+    var rows = [];
+    this.props.contacts.forEach(function (contact) {
+      if (contact.name.indexOf(_this3.props.filterText) === -1) {
+        return;
+      }
+      rows.push(React.createElement(ContactRow, { key: contact.key, contact: contact }));
+    });
     return React.createElement(
-      "div",
-      { className: "editable-field", contentEditable: this.props.initEdit, spellcheck: this.props.spellCheck, onClick: this._handleClick },
-      this.props.text
+      "table",
+      { className: "table table-hover" },
+      React.createElement(
+        "thead",
+        null,
+        React.createElement(
+          "tr",
+          null,
+          React.createElement(
+            "th",
+            null,
+            React.createElement("i", { className: "fa fa-fw fa-user" }),
+            "Name"
+          ),
+          React.createElement(
+            "th",
+            null,
+            React.createElement("i", { className: "fa fa-fw fa-phone" }),
+            "Phone"
+          ),
+          React.createElement(
+            "th",
+            null,
+            React.createElement("i", { className: "fa fa-fw fa-envelope" }),
+            "Email"
+          )
+        )
+      ),
+      React.createElement(
+        "tbody",
+        null,
+        rows
+      )
     );
+  };
+
+  return ContactTable;
+}(React.Component);
+
+var SearchBar = function (_React$Component3) {
+  _inherits(SearchBar, _React$Component3);
+
+  function SearchBar(props) {
+    _classCallCheck(this, SearchBar);
+
+    var _this4 = _possibleConstructorReturn(this, _React$Component3.call(this, props));
+
+    _this4.handleFilterTextInputChange = _this4.handleFilterTextInputChange.bind(_this4);
+    return _this4;
   }
-});
 
-var InputField = React.createClass({
-  displayName: "InputField",
-  _updateField: function _updateField(newStr) {
-    newStr = newStr.split ? newStr.split(' ').reverse().join(' ') : newStr;
-    return this.setState({ text: newStr });
-  },
-  getInitialState: function getInitialState() {
-    this.props.text = this.props.text || '0';
+  SearchBar.prototype.handleFilterTextInputChange = function handleFilterTextInputChange(e) {
+    this.props.onFilterTextInput(e.target.value);
+  };
 
-    return { text: this.props.text };
-  },
-  componentWillMount: function componentWillMount() {
-    ee.addListener('numberCruncher', this._updateField);
-  },
-  render: function render() {
-    return React.createElement(ContentEditable, { text: this.state.text, initEdit: "false", spellcheck: "false", clickHandler: this._clickBait });
-  }
-});
-var TotalRecall = React.createClass({
-  displayName: "TotalRecall",
-  _toggleMemories: function _toggleMemories() {
-    this.setState({ show: !this.state.show });
-  },
-  _recallMemory: function _recallMemory(memory) {
-    store.newInput = memory;
-    ee.emitEvent('toggle-memories');
-  },
-  getInitialState: function getInitialState() {
-    return { show: false };
-  },
-  componentWillMount: function componentWillMount() {
-    ee.addListener('toggle-memories', this._toggleMemories);
-  },
-  render: function render() {
-    var _this = this;
-
-    var classNames = "memory-bank " + (this.state.show ? 'visible' : '');
-
+  SearchBar.prototype.render = function render() {
     return React.createElement(
-      "section",
-      { className: classNames },
-      React.createElement(Button, { text: "+", clickHandler: this._toggleMemories, klass: "toggle-close" }),
-      store.curMemories.map(function (mem) {
-        return React.createElement(Button, { klass: "block memory transparent", text: mem, clickHandler: _this._recallMemory });
+      "form",
+      null,
+      React.createElement("input", {
+        className: "form-control",
+        type: "text",
+        placeholder: "Search...",
+        value: this.props.filterText,
+        onChange: this.handleFilterTextInputChange
       })
     );
-  }
-});
-var ButtonSetFunctions = React.createClass({
-  displayName: "ButtonSetFunctions",
-  _showMemoryBank: function _showMemoryBank() {
-    ee.emitEvent('toggle-memories');
-  },
-  _clear: function _clear() {
-    store.newInput = 0;
-  },
-  _contentClear: function _contentClear() {
-    var curInput = String(store.curInput),
-        lessOne = curInput.substring(0, curInput.length - 1);
+  };
 
-    return store.newInput = lessOne === '' ? 0 : lessOne;
-  },
-  render: function render() {
-    return React.createElement(
-      "section",
-      { className: "button-set--functions" },
-      React.createElement(Button, { klass: "long-text", text: "recall", clickHandler: this._showMemoryBank }),
-      React.createElement(Button, { klass: "long-text", text: "clear", clickHandler: this._clear }),
-      React.createElement(Button, { text: "←", clickHandler: this._contentClear })
-    );
-  }
-});
-var ButtonSetEquations = React.createClass({
-  displayName: "ButtonSetEquations",
-  _eq: function _eq(type) {
-    store.newInput = store.curInput + " " + type + " ";
-  },
-  _equate: function _equate() {
-    store.newInput = eval(store.curInput);
-  },
-  render: function render() {
-    return React.createElement(
-      "section",
-      { className: "button-set--equations" },
-      React.createElement(Button, { text: "+", clickHandler: this._eq }),
-      React.createElement(Button, { text: "-", clickHandler: this._eq }),
-      React.createElement(Button, { text: "*", clickHandler: this._eq }),
-      React.createElement(Button, { text: "/", clickHandler: this._eq }),
-      React.createElement(Button, { text: "=", clickHandler: this._equate })
-    );
-  }
-});
-var ButtonSetNumbers = React.createClass({
-  displayName: "ButtonSetNumbers",
-  _number: function _number(num) {
-    if (!store.curInput) {
-      return store.newInput = num;
-    }
+  return SearchBar;
+}(React.Component);
 
-    return store.newInput = "" + store.curInput + num;
-  },
-  render: function render() {
-    return React.createElement(
-      "section",
-      { className: "button-set--numbers" },
-      React.createElement(Button, { text: "1", clickHandler: this._number }),
-      React.createElement(Button, { text: "2", clickHandler: this._number }),
-      React.createElement(Button, { text: "3", clickHandler: this._number }),
-      React.createElement(Button, { text: "4", clickHandler: this._number }),
-      React.createElement(Button, { text: "5", clickHandler: this._number }),
-      React.createElement(Button, { text: "6", clickHandler: this._number }),
-      React.createElement(Button, { text: "7", clickHandler: this._number }),
-      React.createElement(Button, { text: "8", clickHandler: this._number }),
-      React.createElement(Button, { text: "9", clickHandler: this._number }),
-      React.createElement(Button, { text: "0", clickHandler: this._number })
-    );
+var FilterableContactTable = function (_React$Component4) {
+  _inherits(FilterableContactTable, _React$Component4);
+
+  function FilterableContactTable(props) {
+    _classCallCheck(this, FilterableContactTable);
+
+    // FilterableContactTable is the owner of the state as the filterText is needed in both nodes (searchbar and table) that are below in the hierarchy tree.
+
+    var _this5 = _possibleConstructorReturn(this, _React$Component4.call(this, props));
+
+    _this5.state = {
+      filterText: '',
+      contacts: [{ key: 1, name: 'Tom bong', phone: '555-444-333', email: 'tom@gmail.com' },
+       { key: 2, name: 'Jaja colin', phone: '555-777-888', email: 'jcol@gmail.com' },
+        { key: 3, name: 'Lolo Degong', phone: '555-222-111', email: 'gong.com' }
+         ]
+    };
+    _this5.handleFilterTextInput = _this5.handleFilterTextInput.bind(_this5);
+    _this5.addContact = _this5.addContact.bind(_this5);
+    return _this5;
   }
-});
 
-var store = {
-  input: 0,
-  memory: [],
-  get curInput() {
-    return this.input;
-  },
+  FilterableContactTable.prototype.addContact = function addContact(contact) {
+    var timestamp = new Date().getTime();
+    contact['key'] = timestamp;
+    console.log('BEFORE: this.state.contacts: ' + this.state.contacts.length);
+    // update the state object
+    this.state.contacts.push(contact);
+    // set the state
+    this.setState({ contacts: this.state.contacts });
+  };
 
-  get curMemories() {
-    return this.memory.filter(function (m) {
-      return m !== undefined;
+  FilterableContactTable.prototype.handleFilterTextInput = function handleFilterTextInput(filterText) {
+    //Call to setState to update the UI
+    this.setState({
+      filterText: filterText
     });
-  },
+    //React knows the state has changed, and calls render() method again to learn what should be on the screen
+  };
 
-  set commitMemory(input) {
-    this.memory.push(input);
-  },
+  FilterableContactTable.prototype.render = function render() {
+    return React.createElement(
+      "div",
+      null,
+      React.createElement(
+        "h1",
+        null,
+        "React Contacts List App"
+      ),
+      React.createElement(SearchBar, {
+        filterText: this.state.filterText,
+        onFilterTextInput: this.handleFilterTextInput
+      }),
+      React.createElement(NewContactRow, { addContact: this.addContact }),
+      React.createElement(ContactTable, {
+        contacts: this.state.contacts,
+        filterText: this.state.filterText
+      })
+    );
+  };
 
-  set newInput(str) {
-    var curInput = str,
-        oldInput = this.curInput;
+  return FilterableContactTable;
+}(React.Component);
 
-    if (this.curMemories.indexOf(oldInput) === -1) {
-      this.commitMemory = oldInput;
-    }
+var NewContactRow = function (_React$Component5) {
+  _inherits(NewContactRow, _React$Component5);
 
-    this.input = curInput;
-    ee.emitEvent('numberCruncher', [this.curInput]);
+  function NewContactRow(props) {
+    _classCallCheck(this, NewContactRow);
+
+    var _this6 = _possibleConstructorReturn(this, _React$Component5.call(this, props));
+
+    _this6.handleSubmit = _this6.handleSubmit.bind(_this6);
+    return _this6;
   }
-};
 
-React.render(React.createElement(App, null), document.querySelector('body'));
+  NewContactRow.prototype.handleSubmit = function handleSubmit(event) {
+    event.preventDefault();
+    var target = event.target;
+    var name = target.name.value;
+    var phone = target.phone.value;
+    var email = target.email.value;
+
+    var contact = {
+      name: name,
+      phone: phone,
+      email: email
+    };
+    this.props.addContact(contact);
+  };
+
+  NewContactRow.prototype.render = function render() {
+    return React.createElement(
+      "form",
+      { className: "form-inline", onSubmit: this.handleSubmit },
+      React.createElement(
+        "div",
+        { className: "form-group row" },
+        React.createElement(
+          "div",
+          { className: "col-md-3" },
+          React.createElement("input", { type: "text", name: "name", className: "form-control", id: "nameInput", placeholder: "Name" })
+        ),
+        React.createElement(
+          "div",
+          { className: "col-md-3" },
+          React.createElement("input", { type: "text", name: "phone", className: "form-control", id: "phoneInput", placeholder: "Phone" })
+        ),
+        React.createElement(
+          "div",
+          { className: "col-md-3" },
+          React.createElement("input", { type: "email", name: "email", className: "form-control", id: "emailInput", placeholder: "Email" })
+        ),
+        React.createElement(
+          "div",
+          { className: "col-md-3" },
+          React.createElement(
+            "button",
+            { type: "submit", className: "btn btn-primary" },
+            React.createElement("i", { className: "fa fa-fw fa-plus" }),
+            "Add"
+          )
+        )
+      )
+    );
+  };
+
+  return NewContactRow;
+}(React.Component);
+
+var CONTACTS = [{ key: 1, name: 'Tom bong', phone: '555-444-333', email: 'tom@gmail.com' }, { key: 2, name: 'Jaja colin', phone: '555-777-888', email: 'jcol@gmail.com' }, { key: 3, name: 'Lolo Degong', phone: '555-222-111', email: 'gong@gmail.com' }];
+
+ReactDOM.render(React.createElement(FilterableContactTable, { contacts: CONTACTS }), document.getElementById('container'));
