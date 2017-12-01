@@ -1,316 +1,435 @@
-"use strict";
+'use strict';
 
-var Ingredient = React.createClass({
-  displayName: "Ingredient",
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  render: function render() {
-    return React.createElement(
-      "li",
-      { className: "ingredient" },
-      this.props.ingredient
-    );
-  }
-});
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var RecipeEntry = React.createClass({
-  displayName: "RecipeEntry",
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  getInitialState: function getInitialState() {
-    return { showEntry: false, showModal: false };
-  },
-  showRecipe: function showRecipe() {
-    this.state.showEntry ? this.setState({ showEntry: false }) : this.setState({ showEntry: true });
-  },
-  showRecipeModal: function showRecipeModal(e) {
-    this.state.showModal ? this.setState({ showModal: false }) : this.setState({ showModal: true });
-    var c = this.props.recipe;
-    this.props.handleActiveRecipe(c);
-  },
+function Buttons(props) {
+  return React.createElement(
+    'button',
+    {
+      value: props.value,
+      className: 'btn ' + props.className,
+      onClick: props.onClick
+    },
+    props.value
+  );
+}
 
-  render: function render() {
-    return React.createElement(
-      "div",
-      null,
+function OtherButtons(props) {
+  return React.createElement(
+    'div',
+    { className: 'other-buttons' },
+    React.createElement(Buttons, { value: 'AC', className: 'tombol-lain', onClick: props.clearDisplay }),
+    React.createElement(Buttons, { value: '+/-', className: 'tombol-lain', onClick: props.toggleSign }),
+    React.createElement(Buttons, { value: 'C', className: 'tombol-lain  allclear', onClick: props.clearDisplay })
+  );
+}
+
+function NumberButtons(props) {
+  return React.createElement(
+    'div',
+    { className: 'number-buttons' },
+    React.createElement(Buttons, { value: '7', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '8', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '9', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '4', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '5', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '6', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '1', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '2', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '3', className: 'tombol-angka', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '0', className: 'tombol-angka nol', onClick: props.enterDigit }),
+    React.createElement(Buttons, { value: '.', className: 'tombol-angka', onClick: props.enterDot })
+  );
+}
+
+function OperatorButtons(props) {
+  return React.createElement(
+    'div',
+    { className: 'operator-buttons' },
+    React.createElement(Buttons, { value: '%', className: 'tombol-operator', onClick: props.inputPercent }),
+    React.createElement(Buttons, { value: '√', className: 'tombol-operator', onClick: props.squareRoot }),
+    React.createElement(Buttons, { value: 'x', className: 'tombol-operator', onClick: props.operate }),
+    React.createElement(Buttons, { value: '÷', className: 'tombol-operator', onClick: props.operate }),
+    React.createElement(Buttons, { value: '+', className: 'tombol-operator', onClick: props.operate }),
+    React.createElement(Buttons, { value: '-', className: 'tombol-operator', onClick: props.operate }),
+    React.createElement(Buttons, { value: '=', className: 'equal-button', onClick: props.operate })
+  );
+}
+
+function PickCountry(props) {
+  return React.createElement(
+    'div',
+    { className: 'country' },
+    React.createElement(
+      'h3',
+      { className: 'radio-title' },
+      'Choose your Country'
+    ),
+    React.createElement(
+      'form',
+      { className: 'country-form' },
       React.createElement(
-        "div",
-        { className: "list-group-item" },
-        React.createElement(
-          "h4",
-          { className: "list-group-item-heading recipeHeading",
-            onClick: this.showRecipe
-          },
-          React.createElement("i", { className: this.state.showEntry ? "glyphicon glyphicon-minus" : "glyphicon glyphicon-plus" }),
-          " ",
-          this.props.recipe.recipeName
-        ),
-        " ",
-        React.createElement(
-          "span",
-          { className: "button-wrapper" },
-          React.createElement(EditButton, { onUserClick: this.showRecipeModal }),
-          " ",
-          React.createElement(DeleteButton, { value: this.props.index, onClick: this.props.onDeleteClick })
-        ),
-        this.state.showEntry ? React.createElement(RecipeDetails, { recipe: this.props.recipe }) : null
+        'label',
+        { className: 'radio-inline' },
+        React.createElement('input', { type: 'radio', name: 'country', value: 'en-US', onClick: props.onClick, defaultChecked: true }),
+        'USA'
       ),
-      this.state.showModal ? React.createElement(EditModal, { handleDescription: this.props.handleDescription, handleIngredients: this.props.handleIngredients, value: this.props.index, recipe: this.props.recipe, onUserClick: this.showRecipeModal }) : null
-    );
-  }
-});
-
-var DeleteButton = React.createClass({
-  displayName: "DeleteButton",
-
-  render: function render() {
-
-    return React.createElement(
-      "button",
-      {
-        onClick: this.props.onClick,
-        value: this.props.value,
-        type: "button",
-        className: "btn btn-default danger delete-button"
-      },
-      React.createElement("i", { className: "glyphicon glyphicon-remove" })
-    );
-  }
-});
-
-var EditButton = React.createClass({
-  displayName: "EditButton",
-
-  render: function render() {
-
-    return React.createElement(
-      "button",
-      {
-        onClick: this.props.onUserClick,
-        type: "button",
-        className: "btn btn-default edit-button"
-      },
-      React.createElement("i", { className: "glyphicon glyphicon-pencil" })
-    );
-  }
-});
-
-var EditModal = React.createClass({
-  displayName: "EditModal",
-
-  render: function render() {
-
-    return React.createElement(
-      "div",
-      { className: "modal-back" },
       React.createElement(
-        "div",
-        { className: "container container-fluid" },
+        'label',
+        { className: 'radio-inline' },
+        React.createElement('input', { type: 'radio', name: 'country', value: 'de-DE', onClick: props.onClick }),
+        'German'
+      ),
+      React.createElement(
+        'label',
+        { className: 'radio-inline' },
+        React.createElement('input', { type: 'radio', name: 'country', value: 'ar-EG', onClick: props.onClick }),
+        'Arabic'
+      ),
+      React.createElement(
+        'label',
+        { className: 'radio-inline' },
+        React.createElement('input', { type: 'radio', name: 'country', value: 'en-IN', onClick: props.onClick }),
+        'India'
+      ),
+      React.createElement(
+        'label',
+        { className: 'radio-inline' },
+        React.createElement('input', { type: 'radio', name: 'country', value: 'zh-Hans-CN-u-nu-hanidec', onClick: props.onClick }),
+        'China'
+      )
+    )
+  );
+}
+
+var OutputScreen = function (_React$Component) {
+  _inherits(OutputScreen, _React$Component);
+
+  function OutputScreen(props) {
+    _classCallCheck(this, OutputScreen);
+
+    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+
+    _this.state = {
+      pickedCountry: 'en-US'
+    };
+    _this.handleClick = _this.handleClick.bind(_this);
+    return _this;
+  }
+
+  OutputScreen.prototype.handleClick = function handleClick(event) {
+    var newCountry = event.target.value;
+    this.setState({
+      pickedCountry: newCountry
+    });
+  };
+
+  OutputScreen.prototype.render = function render() {
+    var output = this.props.output;
+    var language = this.state.pickedCountry;
+    var uniqValue = parseFloat(output).toLocaleString(language, {
+      maximumFractionDigits: 14 });
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(PickCountry, { onClick: this.handleClick }),
+      React.createElement('hr', null),
+      React.createElement(
+        'div',
+        { className: 'output-screen' },
         React.createElement(
-          "div",
-          { className: "modal-front" },
+          'div',
+          { className: 'history' },
           React.createElement(
-            "h4",
-            { className: "list-group-item-heading recipeHeading" },
-            "Edit ",
-            this.props.recipe.recipeName
-          ),
-          "      ",
-          React.createElement(
-            "div",
-            { className: "container container-fluid" },
-            React.createElement(
-              "h5",
-              null,
-              "Ingredients:"
-            ),
-            React.createElement(
-              "p",
-              null,
-              "seperated by commas"
-            ),
-            React.createElement("input", { type: "text", value: this.props.recipe.ingredients, onChange: this.props.handleIngredients, placeholder: "ingredients,go,here" }),
-            React.createElement(
-              "h5",
-              null,
-              "Instructions"
-            ),
-            React.createElement("textarea", { type: "text", value: this.props.recipe.description, onChange: this.props.handleDescription })
+            'p',
+            null,
+            this.props.history
           ),
           React.createElement(
-            "div",
-            { className: "modal-buttons" },
-            React.createElement(
-              "button",
-              {
-                className: "btn btn-default danger",
-                onClick: this.props.onUserClick
-              },
-              React.createElement("i", { className: "glyphicon glyphicon-ok" }),
-              " Submit"
-            )
+            'p',
+            null,
+            this.props.operatorOutput
           )
+        ),
+        React.createElement(
+          'h3',
+          { style: language == 'zh-Hans-CN-u-nu-hanidec' ? { fontSize: 25 } : null },
+          uniqValue
         )
       )
     );
-  }
-});
+  };
 
-var RecipeDetails = React.createClass({
-  displayName: "RecipeDetails",
+  return OutputScreen;
+}(React.Component);
 
-  render: function render() {
+var Calculator = function (_React$Component2) {
+  _inherits(Calculator, _React$Component2);
 
-    var ingredients = this.props.recipe.ingredients.map(function (ingredient, index) {
-      return React.createElement(Ingredient, { key: index, ingredient: ingredient });
-    });
+  function Calculator() {
+    _classCallCheck(this, Calculator);
 
-    return React.createElement(
-      "div",
-      null,
-      React.createElement(
-        "div",
-        { className: "recipeDetails" },
-        this.props.recipe.ingredients ? React.createElement(
-          "h4",
-          null,
-          "Ingredients:"
-        ) : null,
-        React.createElement(
-          "div",
-          null,
-          ingredients
-        ),
-        this.props.recipe.description ? React.createElement(
-          "h4",
-          null,
-          "Preparation Instructions:"
-        ) : null,
-        React.createElement(
-          "p",
-          { className: "list-group-item-text" },
-          this.props.recipe.description
-        )
-      ),
-      React.createElement("div", { className: "recipeFooter" })
-    );
-  }
+    var _this2 = _possibleConstructorReturn(this, _React$Component2.call(this));
 
-});
-
-var RecipeApp = React.createClass({
-  displayName: "RecipeApp",
-
-  getInitialState: function getInitialState() {
-
-    return {
-      recipes: [{ "recipeName": "Pizza", "ingredients": ["Bread", "Brocolli", "Tomato", "Onion", "Mushroom"], "description": "Add toppings to dough base and place into oven for 35 minutes on a high heat.\n\nBellissimo!" }, { "recipeName": "Spaghetti", "ingredients": ["Spaghetti", "Sauce", "Tomatoes", "Bacon", "Garlic"], "description": "Try not to get it all over your shirt." }, { "recipeName": "Meatballs", "ingredients": ["Minced Beef/Pork", "Onions", "Flour", "Chili Peppers", "Tomatoes", "Seasoning"], "description": "Roughly chop onions and mix with minced meat. Add flour for firmness until they hold their own shape. Place into pan on high heat with a brushing of oil until browned. Reduce heat until cooked through" }, { "recipeName": "Boiled Cabbage", "ingredients": ["Cabage", "Water"], "description": "Add cabbage to boiling water. Wait. Eat. Delicious - Maybe..." }, { "recipeName": "CheeseCake", "ingredients": ["Cream Cheese", "Whipping Cream", "Strawberries", "Ginger Snap Biscuits", "Sugar", "Butter"], "description": "Crumble the biscuits into a tin and mix with the butter. Heat for a few minutes to form a solid base. Mix the cream cheese and whipping cream until heavy, then apply to top of biscuit base.\n\n\nAdd strawberries for decoration and leave to rest in fridge for 12 hours." }],
-      "active": 0
+    _this2.state = {
+      output: 0,
+      operatorOutput: '',
+      storeValue: [],
+      history: '',
+      type: 'round',
+      maxLength: 10
     };
-  },
+    _this2.enterDigit = _this2.enterDigit.bind(_this2);
+    _this2.enterDot = _this2.enterDot.bind(_this2);
+    _this2.clearDisplay = _this2.clearDisplay.bind(_this2);
+    _this2.toggleSign = _this2.toggleSign.bind(_this2);
+    _this2.inputPercent = _this2.inputPercent.bind(_this2);
+    _this2.squareRoot = _this2.squareRoot.bind(_this2);
+    _this2.operate = _this2.operate.bind(_this2);
+    return _this2;
+  }
 
-  componentWillMount: function componentWillMount() {
-    if (localStorage && localStorage.getItem('kristarl_recipes')) {
-      this.setState({ recipes: JSON.parse(localStorage.getItem('kristarl_recipes')) });
+  Calculator.prototype.clearDisplay = function clearDisplay(event) {
+    var value = event.target.value;
+    var _state = this.state;
+    var output = _state.output;
+    var operatorOutput = _state.operatorOutput;
+
+    if (value === 'AC') {
+      this.setState({
+        output: 0,
+        operatorOutput: '',
+        storeValue: [],
+        history: ''
+      });
+    } else if (operatorOutput === '') {
+      this.setState({
+        output: output.length === 1 ? 0 : output.substring(0, output.length - 1)
+      });
     }
-  },
+  };
 
-  componentDidUpdate: function componentDidUpdate() {
-    // disable when testing so storage doesn't need to be reset
-    localStorage.setItem('kristarl_recipes', JSON.stringify(this.state.recipes));
-  },
+  Calculator.prototype.toggleSign = function toggleSign() {
+    var _state2 = this.state;
+    var output = _state2.output;
+    var operatorOutput = _state2.operatorOutput;
 
-  createNewRecipe: function createNewRecipe(e) {
-    e.preventDefault();
-    if (e.currentTarget.value) {
-      var newRecipeValue = e.currentTarget.value;
+    if (operatorOutput === '') {
+      this.setState({
+        output: String(output * -1)
+      });
+    }
+  };
+
+  Calculator.prototype.inputPercent = function inputPercent() {
+    var _state3 = this.state;
+    var output = _state3.output;
+    var operatorOutput = _state3.operatorOutput;
+    var type = _state3.type;
+    var maxLength = _state3.maxLength;
+
+    if (operatorOutput === '') {
+      this.setState({
+        output: String(DecimalAdjust(type, output / 100, -maxLength)),
+        operatorOutput: ''
+      });
+    }
+  };
+
+  Calculator.prototype.squareRoot = function squareRoot() {
+    var _state4 = this.state;
+    var output = _state4.output;
+    var operatorOutput = _state4.operatorOutput;
+    var type = _state4.type;
+    var maxLength = _state4.maxLength;
+
+    var sqrt = String(Math.sqrt(output));
+
+    if (operatorOutput === '') {
+      this.setState({
+        output: sqrt.length > maxLength ? sqrt.substr(0, maxLength) : sqrt,
+        operatorOutput: ''
+      });
+    }
+  };
+
+  Calculator.prototype.enterDot = function enterDot(event) {
+    var dot = event.target.value;
+    var _state5 = this.state;
+    var output = _state5.output;
+    var operatorOutput = _state5.operatorOutput;
+
+    if (operatorOutput === '') {
+      if (output.indexOf(dot) == -1) {
+        this.setState({
+          output: output + dot
+        });
+      }
+    }
+  };
+
+  Calculator.prototype.enterDigit = function enterDigit(event) {
+    //if length > 15, can not input. how?
+    var value = event.target.value;
+    var _state6 = this.state;
+    var output = _state6.output;
+    var operatorOutput = _state6.operatorOutput;
+    var storeValue = _state6.storeValue;
+    var history = _state6.history;
+    var maxLength = _state6.maxLength;
+
+    if (operatorOutput !== '') {
+      this.setState(function (prevState) {
+        storeValue.push(operatorOutput);
+        return {
+          output: value,
+          operatorOutput: ''
+        };
+      });
+    } else if (String(output).length <= maxLength) {
+      this.setState({
+        output: output === 0 ? value : output + value
+      });
     } else {
-      var newRecipeValue = "New Recipe";
+      this.setState({
+        output: output
+      });
+    }
+    this.setState({
+      history: history + operatorOutput
+    });
+  };
+
+  Calculator.prototype.operate = function operate(event) {
+    var operator = event.target.value;
+    var storeValue = this.state.storeValue;
+    var _state7 = this.state;
+    var output = _state7.output;
+    var operatorOutput = _state7.operatorOutput;
+    var history = _state7.history;
+    var type = _state7.type;
+    var maxLength = _state7.maxLength;
+
+    if (storeValue.length === 0) {
+      storeValue.push(Number(output));
+    } else {
+      var newVal = ComputeOp(storeValue, Number(output));
+      this.setState({
+        output: newVal.length > maxLength ? DecimalAdjust(type, newVal, -(newVal.length - maxLength)) : newVal,
+        storeValue: [newVal]
+      });
     }
 
-    this.setState({ recipes: this.state.recipes.concat({ "recipeName": newRecipeValue, "ingredients": [""], "description": "" }) });
-  },
-
-  onDeleteClick: function onDeleteClick(event, index) {
-    var targetIndex = parseInt(event.currentTarget.value);
-    this.setState(function (state) {
-      state.recipes.splice(targetIndex, 1);
-      return { recipes: state.recipes };
+    this.setState({
+      operatorOutput: operator,
+      history: history === '' || history.indexOf('=') > -1 ? output : history + output
     });
-  },
+  };
 
-  handleDescription: function handleDescription(event, index) {
-    var recipe = this.state.recipes.slice();
-    recipe[this.state.active].description = event.target.value;
-    this.setState({ "recipes": recipe });
-  },
-
-  handleIngredients: function handleIngredients(event) {
-    var recipe = this.state.recipes.slice();
-    recipe[this.state.active].ingredients = event.target.value.split(",");
-    this.setState({ "recipes": recipe });
-    console.log(this.state.recipes[this.state.active].ingredients);
-  },
-  handleActiveRecipe: function handleActiveRecipe(e) {
-    this.setState({ "active": this.state.recipes.indexOf(e) });
-  },
-
-  render: function render() {
-    var recipes = this.state.recipes.map(function (recipe, index) {
-      return React.createElement(RecipeEntry, { handleActiveRecipe: this.handleActiveRecipe, key: index, index: index, recipe: recipe, onDeleteClick: this.onDeleteClick, handleDescription: this.handleDescription, handleIngredients: this.handleIngredients });
-    }.bind(this));
-
+  Calculator.prototype.render = function render() {
     return React.createElement(
-      "div",
-      null,
-      React.createElement(
-        "h1",
-        null,
-        "Recipe Box"
-      ),
-      React.createElement(
-        "div",
-        { className: "list-group" },
-        React.createElement(
-          "div",
-          null,
-          recipes
-        )
-      ),
-      React.createElement(NewRecipe, { recipes: this.state.recipes, onAddRecipe: this.createNewRecipe })
-    );
-  }
-});
-
-var NewRecipe = React.createClass({
-  displayName: "NewRecipe",
-
-  getInitialState: function getInitialState() {
-    return { value: "" };
-  },
-  handleChange: function handleChange(e) {
-    this.setState({ value: e.target.value });
-  },
-
-  render: function render() {
-    return React.createElement(
-      "form",
-      {
-        id: "add-recipe",
-        onSubmit: this.props.onAddRecipe,
-        value: this.state.value
-      },
-      React.createElement("input", {
-        placeholder: "Add New Recipe",
-        type: "input",
-        value: this.state.value,
-        onChange: this.handleChange
+      'div',
+      { className: 'calculator' },
+      React.createElement(OutputScreen, {
+        history: this.state.history,
+        output: this.state.output,
+        operatorOutput: this.state.operatorOutput
       }),
-      React.createElement("input", {
-        type: "submit",
-        value: "+ Add",
-        className: "btn btn-default"
-      })
+      React.createElement(
+        'div',
+        { className: 'calc-buttons' },
+        React.createElement(OtherButtons, {
+          clearDisplay: this.clearDisplay,
+          toggleSign: this.toggleSign
+        }),
+        React.createElement(NumberButtons, {
+          enterDigit: this.enterDigit,
+          enterDot: this.enterDot
+        }),
+        React.createElement(OperatorButtons, {
+          inputPercent: this.inputPercent,
+          squareRoot: this.squareRoot,
+          operate: this.operate
+        })
+      )
     );
-  }
-});
+  };
 
-React.render(React.createElement(RecipeApp, null), root);
+  return Calculator;
+}(React.Component);
+
+var App = function (_React$Component3) {
+  _inherits(App, _React$Component3);
+
+  function App() {
+    _classCallCheck(this, App);
+
+    return _possibleConstructorReturn(this, _React$Component3.apply(this, arguments));
+  }
+
+  App.prototype.render = function render() {
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(Calculator, null)
+    );
+  };
+
+  return App;
+}(React.Component);
+
+ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+
+function ComputeOp(arr, curr) {
+  var newVal = arr.filter(function (el, idx, arai) {
+    return arai.indexOf(el) === idx;
+  });
+  var prev = newVal[0];
+  var next = curr;
+  var operator = newVal[1];
+  var result = 0;
+
+  switch (operator) {
+    case '+':
+      result = prev + next;
+      break;
+    case '-':
+      result = prev - next;
+      break;
+    case '÷':
+      result = prev / next;
+      break;
+    case 'x':
+      result = prev * next;
+      break;
+    default:
+      result = next;
+  }
+  return result;
+}
+
+function DecimalAdjust(type, value, exp) {
+  if (typeof exp === 'undefined' || +exp === 0) {
+    return Math[type](value);
+  }
+  value = +value;
+  exp = +exp;
+
+  if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+    return NaN;
+  }
+
+  if (value < 0) {
+    return -decimalAdjust(type, -value, exp);
+  }
+  // Shift
+  value = value.toString().split('e');
+  value = Math[type](+(value[0] + 'e' + (value[1] ? +value[1] - exp : -exp)));
+  // Shift back
+  value = value.toString().split('e');
+  return +(value[0] + 'e' + (value[1] ? +value[1] + exp : exp));
+}
