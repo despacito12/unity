@@ -1,123 +1,74 @@
-body{
-  font-family: 'Heebo', sans-serif;
-  width: 100%;
-  height: 100%;
+body {
+  background-color: #77dfff;
 }
 
-#app{
-  margin-top: 50px;
+h1{
+  margin-top:70px;
+  text-align:center;
+  margin-bottom:-20px;
+}
+
+button {
+  font-size:1.5em;
 }
 
 .calculator{
-  width: 444px;
-  padding: 10px;
-  margin: 0 auto;
-  background-color: #0091EA;
-  border-radius: 5%;
+  background-color:red;
+  margin:50px auto;
+  width:450px;
+  height:450px;  
+  box-shadow: 3px 3px 3px 4px teal;
 }
 
-.output-screen{
-  height: 140px;
-  color: #fafafa;
-  text-align: right;
-  padding: 0px 20px;
-  font-family: 'Source Code Pro', monospace;
-}
-.output-screen h3{
-  font-size: 3em;
-}
-
-.country{
-  text-align: center;
-  font-weight: 300;
+.display{
+  height:150px;
+  font-size:30px;
+  text-align:right;
+  min-width:100%;
+  background-color:black;
+  color:white;
+  padding-top:0px;
 }
 
-.history{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 2em;
-  margin-bottom: 10px;
+.result{
+  padding-top:16px;
+  font-weight:400;
+  padding-right:8px;
 }
 
-button{
-  width: 70px;
-  height: 70px;
-}
-.equal-button{
-  width: 140px;
-  color: white;
-  background: none;
-  display: block;
-  border: none;
-  outline: none; 
-  font-size: 2em;
+.keypad {
+  background-color:green;
+  width:100%;
+  display:flex;
 }
 
-.calc-buttons{
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+.nonOperators {
+  width: 75%;
+  background-color:yellow;
 }
 
-.other-buttons{
-  display: flex;
-  flex-flow: column wrap;
-  width: 70px;
-  height: 280px;
-  background: #FF4081;
-}
-.tombol-lain{
-  color: #fafafa;
-  background: none;
-  display: block;
-  border: none;
-  outline: none;
-  font-size: 2em;
-}
-.allclear{
-  flex: 2;
+.function{
+  width:33%;
+  height:60px;
+  background-color:#CCC;
 }
 
-.number-buttons{
-  display: flex;
-  flex-flow: row wrap;
-  width: 210px;
-  height: 280px;
-  background: #80D8FF;
-}
-.tombol-angka{
-  color: black;
-  background: none;
-  display: block;
-  border: none;
-  outline: none;
-  font-size: 2em;
-}
-.nol {
-  flex: 2;
+.digit{
+  width:33%;
+  height:60px;
 }
 
-.operator-buttons{
-  display: flex;
-  flex-flow: row wrap;
-  width: 140px;
-  height: 280px;
-  background: #E040FB;
-}
-.tombol-operator{
-  color: #fafafa;
-  background: none;
-  display: block;
-  border: none;
-  outline: none; 
-  font-size: 2em;
+.digit_wide{
+  width:66%;
 }
 
-.footer {
-  font-family: 'Heebo', sans-serif;
-  font-size: 1.2em;
-  font-weight: 300;
-  text-align: center;
-  padding: 20px;
+.operators {
+  width:25%;
+}
+
+.operator {
+  width:100%;
+  height:60px;
+   background-color:darkorange;
+  color:white;
 }
