@@ -6,262 +6,247 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ContactRow = function (_React$Component) {
-  _inherits(ContactRow, _React$Component);
+var Button = function Button(props) {
+  var classes = props.buttonType + " " + props.buttonDetail;
+  return React.createElement(
+    "button",
+    { value: props.value, onClick: props.onClick, className: classes },
+    props.value
+  );
+};
 
-  function ContactRow() {
-    _classCallCheck(this, ContactRow);
+var ButtonBox = function ButtonBox(props) {
+  return React.createElement(
+    "div",
+    { className: "button-box" },
+    React.createElement(Button, { onClick: props.clearHandler, buttonType: "clear-btn", buttonDetail: "clearall", value: "CE" }),
+    React.createElement(Button, { onClick: props.clearHandler, buttonType: "clear-btn", buttonDetail: "clear", value: "C" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "7" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "8" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "9" }),
+    React.createElement(Button, { onClick: props.operatorHandler, buttonType: "number-btn", buttonDetail: "operator", value: "÷" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "4" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "5" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "6" }),
+    React.createElement(Button, { onClick: props.operatorHandler, buttonType: "number-btn", buttonDetail: "operator", value: "×" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "1" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "2" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "3" }),
+    React.createElement(Button, { onClick: props.operatorHandler, buttonType: "number-btn", buttonDetail: "operator", value: "-" }),
+    React.createElement(Button, { onClick: props.equalHandler, buttonType: "number-btn", buttonDetail: "equal", value: "=" }),
+    React.createElement(Button, { onClick: props.length < 10 ? props.numberHandler : null, buttonType: "number-btn", buttonDetail: "number", value: "0" }),
+    React.createElement(Button, { onClick: props.pointHandler, buttonType: "number-btn", buttonDetail: "point", value: "." }),
+    React.createElement(Button, { onClick: props.operatorHandler, buttonType: "number-btn", buttonDetail: "operator", value: "+" })
+  );
+};
 
-    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
-  }
+var Calculator = function (_React$Component) {
+  _inherits(Calculator, _React$Component);
 
-  ContactRow.prototype.render = function render() {
-    return React.createElement(
-      "tr",
-      null,
-      React.createElement(
-        "td",
-        null,
-        this.props.contact.name
-      ),
-      React.createElement(
-        "td",
-        null,
-        this.props.contact.phone
-      ),
-      React.createElement(
-        "td",
-        null,
-        this.props.contact.email
-      )
-    );
-  };
+  function Calculator(props) {
+    _classCallCheck(this, Calculator);
 
-  return ContactRow;
-}(React.Component);
+    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-var ContactTable = function (_React$Component2) {
-  _inherits(ContactTable, _React$Component2);
-
-  function ContactTable() {
-    _classCallCheck(this, ContactTable);
-
-    return _possibleConstructorReturn(this, _React$Component2.apply(this, arguments));
-  }
-
-  ContactTable.prototype.render = function render() {
-    var _this3 = this;
-
-    var rows = [];
-    this.props.contacts.forEach(function (contact) {
-      if (contact.name.indexOf(_this3.props.filterText) === -1) {
-        return;
-      }
-      rows.push(React.createElement(ContactRow, { key: contact.key, contact: contact }));
-    });
-    return React.createElement(
-      "table",
-      { className: "table table-hover" },
-      React.createElement(
-        "thead",
-        null,
-        React.createElement(
-          "tr",
-          null,
-          React.createElement(
-            "th",
-            null,
-            React.createElement("i", { className: "fa fa-fw fa-user" }),
-            "Name"
-          ),
-          React.createElement(
-            "th",
-            null,
-            React.createElement("i", { className: "fa fa-fw fa-phone" }),
-            "Phone"
-          ),
-          React.createElement(
-            "th",
-            null,
-            React.createElement("i", { className: "fa fa-fw fa-envelope" }),
-            "Email"
-          )
-        )
-      ),
-      React.createElement(
-        "tbody",
-        null,
-        rows
-      )
-    );
-  };
-
-  return ContactTable;
-}(React.Component);
-
-var SearchBar = function (_React$Component3) {
-  _inherits(SearchBar, _React$Component3);
-
-  function SearchBar(props) {
-    _classCallCheck(this, SearchBar);
-
-    var _this4 = _possibleConstructorReturn(this, _React$Component3.call(this, props));
-
-    _this4.handleFilterTextInputChange = _this4.handleFilterTextInputChange.bind(_this4);
-    return _this4;
-  }
-
-  SearchBar.prototype.handleFilterTextInputChange = function handleFilterTextInputChange(e) {
-    this.props.onFilterTextInput(e.target.value);
-  };
-
-  SearchBar.prototype.render = function render() {
-    return React.createElement(
-      "form",
-      null,
-      React.createElement("input", {
-        className: "form-control",
-        type: "text",
-        placeholder: "Search...",
-        value: this.props.filterText,
-        onChange: this.handleFilterTextInputChange
-      })
-    );
-  };
-
-  return SearchBar;
-}(React.Component);
-
-var FilterableContactTable = function (_React$Component4) {
-  _inherits(FilterableContactTable, _React$Component4);
-
-  function FilterableContactTable(props) {
-    _classCallCheck(this, FilterableContactTable);
-
-    // FilterableContactTable is the owner of the state as the filterText is needed in both nodes (searchbar and table) that are below in the hierarchy tree.
-
-    var _this5 = _possibleConstructorReturn(this, _React$Component4.call(this, props));
-
-    _this5.state = {
-      filterText: '',
-      contacts: [{ key: 1, name: 'Tom bong', phone: '555-444-333', email: 'tom@gmail.com' },
-       { key: 2, name: 'Jaja colin', phone: '555-777-888', email: 'jcol@gmail.com' },
-        { key: 3, name: 'Lolo Degong', phone: '555-222-111', email: 'gong.com' }
-         ]
+    _this.state = {
+      number: "",
+      sequenceArray: [],
+      currentIndex: 0,
+      oldNumber: "",
+      result: "",
+      operator: "",
+      equalized: false,
+      chainOps: false,
+      pointCheck: false
     };
-    _this5.handleFilterTextInput = _this5.handleFilterTextInput.bind(_this5);
-    _this5.addContact = _this5.addContact.bind(_this5);
-    return _this5;
+    return _this;
   }
 
-  FilterableContactTable.prototype.addContact = function addContact(contact) {
-    var timestamp = new Date().getTime();
-    contact['key'] = timestamp;
-    console.log('BEFORE: this.state.contacts: ' + this.state.contacts.length);
-    // update the state object
-    this.state.contacts.push(contact);
-    // set the state
-    this.setState({ contacts: this.state.contacts });
+  Calculator.prototype.execute = function execute() {
+    var result = "";
+    switch (this.state.operator) {
+      case "+":
+        result = (parseFloat(this.state.oldNumber) + parseFloat(this.state.number)).toString();
+        break;
+      case "-":
+        result = (parseFloat(this.state.oldNumber) - parseFloat(this.state.number)).toString();
+        break;
+      case "÷":
+        result = (parseFloat(this.state.oldNumber) / parseFloat(this.state.number)).toString();
+        break;
+      case "×":
+        result = (parseFloat(this.state.oldNumber) * parseFloat(this.state.number)).toString();
+        break;
+    }
+    if (result.indexOf(".") && result.length > 10) {
+      var beforePoint = Math.round(parseFloat(result)).toString().length;
+      if (beforePoint < 10) {
+        var zeroes = "1";
+        for (var i = 10 - beforePoint; i > 0; i--) {
+          zeroes += "0";
+        }
+        result = (Math.round(result * zeroes) / zeroes).toString();
+      } else {
+        result = "ERROR";
+      }
+    } else if (result.length > 10) {
+      result = "ERROR";
+    }
+    if (result === "ERROR") {
+      this.setState({
+        pointCheck: false,
+        equalized: true,
+        oldNumber: "",
+        number: "",
+        operator: ""
+      });
+    }
+    return result;
   };
 
-  FilterableContactTable.prototype.handleFilterTextInput = function handleFilterTextInput(filterText) {
-    //Call to setState to update the UI
+  Calculator.prototype.clearHandler = function clearHandler(event) {
+    var sequenceArray = this.state.sequenceArray.slice();
+    if (event.target.value !== "CE") {
+      sequenceArray[this.state.currentIndex] = "";
+    }
     this.setState({
-      filterText: filterText
+      // numberSequence: event.target.value === "CE" ?
+      //   "" :
+      //   this.state.numberSequence.substr(0, this.state.numberSequence.length - this.state.number.length),
+      sequenceArray: event.target.value !== "CE" ? sequenceArray : [],
+      currentIndex: event.target.value !== "CE" ? this.state.currentIndex : 0,
+      pointCheck: false,
+      number: "",
+      result: "",
+      operator: event.target.value !== "CE" ? this.state.operator : "",
+      equalized: false,
+      chainOps: false,
+      error: false
     });
-    //React knows the state has changed, and calls render() method again to learn what should be on the screen
   };
 
-  FilterableContactTable.prototype.render = function render() {
+  Calculator.prototype.numberHandler = function numberHandler(event) {
+    var currentIndex = this.state.currentIndex !== 0 ? this.state.currentIndex : 0;
+    var number = "" + (this.state.number !== "0" && !this.state.equalized && !this.state.chainOps ? this.state.number : "") + event.target.value;
+    var sequenceArray = !this.state.equalized ? this.state.sequenceArray.slice() : [];
+    sequenceArray[currentIndex] = number;
+    this.setState({
+      result: "",
+      number: number,
+      sequenceArray: sequenceArray,
+      // numberSequence:
+      //   `${
+      //   this.state.numberSequence !== "0" && !this.state.equalized ?
+      //   this.state.numberSequence :
+      //   ""
+      // }${event.target.value}`,
+      equalized: false,
+      chainOps: false,
+      currentIndex: currentIndex
+    });
+  };
+
+  Calculator.prototype.operatorHandler = function operatorHandler(event) {
+    var sequenceArray = this.state.sequenceArray.slice();
+    sequenceArray.push(event.target.value);
+    if (this.state.number !== "") {
+      var result = "";
+      if (this.state.operator !== "") {
+        result = this.execute();
+      }
+      this.setState({
+        pointCheck: false,
+        operator: event.target.value,
+        result: result,
+        oldNumber: this.state.operator === "" ? this.state.number : result !== "" ? result : this.state.number,
+        number: this.state.operator === "" ? "" : this.state.number,
+        // numberSequence: `${this.state.numberSequence}${event.target.value}`,
+        chainOps: this.state.operator !== "",
+        currentIndex: this.state.currentIndex += 2,
+        sequenceArray: sequenceArray
+      });
+    }
+  };
+
+  Calculator.prototype.equalHandler = function equalHandler() {
+    if (this.state.number !== "" && this.state.oldNumber !== "" && !isNaN(this.state.sequenceArray[this.state.currentIndex])) {
+      var result = "";
+      result = this.execute();
+      this.setState({
+        result: result,
+        pointCheck: false,
+        equalized: true,
+        oldNumber: "",
+        number: "",
+        operator: ""
+      });
+    }
+  };
+
+  Calculator.prototype.pointHandler = function pointHandler() {
+    var number = this.state.number !== "" ? this.state.number + "." : "0.";
+    var sequenceArray = this.state.sequenceArray.slice();
+    sequenceArray[this.state.currentIndex] = number;
+    if (!this.state.pointCheck) {
+      this.setState({
+        number: number,
+        // numberSequence: this.state.numberSequence !== "" ?
+        //   `${this.state.numberSequence}.` :
+        //   `0.`,
+        pointCheck: true,
+        sequenceArray: sequenceArray
+      });
+    }
+  };
+
+  Calculator.prototype.render = function render() {
     return React.createElement(
       "div",
-      null,
-      React.createElement(
-        "h1",
-        null,
-        "React Contacts List App"
-      ),
-      React.createElement(SearchBar, {
-        filterText: this.state.filterText,
-        onFilterTextInput: this.handleFilterTextInput
-      }),
-      React.createElement(NewContactRow, { addContact: this.addContact }),
-      React.createElement(ContactTable, {
-        contacts: this.state.contacts,
-        filterText: this.state.filterText
-      })
-    );
-  };
-
-  return FilterableContactTable;
-}(React.Component);
-
-var NewContactRow = function (_React$Component5) {
-  _inherits(NewContactRow, _React$Component5);
-
-  function NewContactRow(props) {
-    _classCallCheck(this, NewContactRow);
-
-    var _this6 = _possibleConstructorReturn(this, _React$Component5.call(this, props));
-
-    _this6.handleSubmit = _this6.handleSubmit.bind(_this6);
-    return _this6;
-  }
-
-  NewContactRow.prototype.handleSubmit = function handleSubmit(event) {
-    event.preventDefault();
-    var target = event.target;
-    var name = target.name.value;
-    var phone = target.phone.value;
-    var email = target.email.value;
-
-    var contact = {
-      name: name,
-      phone: phone,
-      email: email
-    };
-    this.props.addContact(contact);
-  };
-
-  NewContactRow.prototype.render = function render() {
-    return React.createElement(
-      "form",
-      { className: "form-inline", onSubmit: this.handleSubmit },
+      { className: "container", id: "main-view" },
       React.createElement(
         "div",
-        { className: "form-group row" },
+        { className: "calculator-ext" },
         React.createElement(
           "div",
-          { className: "col-md-3" },
-          React.createElement("input", { type: "text", name: "name", className: "form-control", id: "nameInput", placeholder: "Name" })
-        ),
-        React.createElement(
-          "div",
-          { className: "col-md-3" },
-          React.createElement("input", { type: "text", name: "phone", className: "form-control", id: "phoneInput", placeholder: "Phone" })
-        ),
-        React.createElement(
-          "div",
-          { className: "col-md-3" },
-          React.createElement("input", { type: "email", name: "email", className: "form-control", id: "emailInput", placeholder: "Email" })
-        ),
-        React.createElement(
-          "div",
-          { className: "col-md-3" },
+          { className: "calculator-top-div" },
           React.createElement(
-            "button",
-            { type: "submit", className: "btn btn-primary" },
-            React.createElement("i", { className: "fa fa-fw fa-plus" }),
-            "Add"
+            "h4",
+            null,
+            "jessica's REACT Calculator"
           )
+        ),
+        React.createElement(
+          "div",
+          { className: "calculator-int" },
+          React.createElement(
+            "div",
+            { className: "text-box" },
+            React.createElement(
+              "div",
+              { type: "text", name: "upper-display", className: "display-up" },
+              this.state.equalized || this.state.chainOps ? this.state.result : this.state.number !== "" ? this.state.number : 0
+            ),
+            React.createElement(
+              "div",
+              { type: "text", name: "lower-display", className: "display-down" },
+              /*{this.state.numberSequence !== "" ? this.state.numberSequence : 0}*/
+              this.state.sequenceArray.join("") !== "" ? this.state.sequenceArray.join("") : 0
+            )
+          ),
+          React.createElement(ButtonBox, {
+            numberHandler: this.numberHandler.bind(this),
+            operatorHandler: this.operatorHandler.bind(this),
+            clearHandler: this.clearHandler.bind(this),
+            pointHandler: this.pointHandler.bind(this),
+            equalHandler: this.equalHandler.bind(this),
+            length: this.state.number.length
+          })
         )
       )
     );
   };
 
-  return NewContactRow;
+  return Calculator;
 }(React.Component);
 
-var CONTACTS = [{ key: 1, name: 'Tom bong', phone: '555-444-333', email: 'tom@gmail.com' }, { key: 2, name: 'Jaja colin', phone: '555-777-888', email: 'jcol@gmail.com' }, { key: 3, name: 'Lolo Degong', phone: '555-222-111', email: 'gong@gmail.com' }];
-
-ReactDOM.render(React.createElement(FilterableContactTable, { contacts: CONTACTS }), document.getElementById('container'));
+ReactDOM.render(React.createElement(Calculator, null), document.getElementById('root'));
