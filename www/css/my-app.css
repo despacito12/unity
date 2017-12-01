@@ -1,106 +1,123 @@
-body {
-  font-family: sans-serif;
-  background: #efefef;
-  width: 50%;
-  padding-left: 22%;
+body{
+  font-family: 'Heebo', sans-serif;
+  width: 100%;
+  height: 100%;
 }
 
-.container-fluid {
-  max-width: 300px;
+#app{
+  margin-top: 50px;
 }
 
-h1 {
-  text-align: center;
-  color: #414F86;
-}
-
-.list-group {
-  margin-bottom: 0;
-}
-
-.list-group-item, .recipeHeading {
-  padding: 0;
-  margin: 2px;
-  overflow: visible;
-}
-
-.recipeHeading {
-  background: #4A1942;
-  color: #EAEAEA;
+.calculator{
+  width: 444px;
   padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
+  margin: 0 auto;
+  background-color: #0091EA;
+  border-radius: 5%;
 }
 
-.recipeDetails {
-  padding: 10px;
+.output-screen{
+  height: 140px;
+  color: #fafafa;
+  text-align: right;
+  padding: 0px 20px;
+  font-family: 'Source Code Pro', monospace;
 }
-.recipeDetails h4 {
-  font-size: 12px;
-}
-
-.ingredient {
-  display: inline-block;
-  color: #FFF;
-  background: #8C93A8;
-  padding: 1px 4px;
-  margin: 2px 5px 0 0;
+.output-screen h3{
+  font-size: 3em;
 }
 
-.button-wrapper {
-  float: right;
-  margin-top: -40px;
-  margin-right: 4px;
-}
-
-.modal-back {
-  background: rgba(0, 0, 0, 0.4);
-  position: absolute;
-  width: 100%;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.modal-front {
-  width: 100%;
-  min-height: 300px;
-  margin-top: 40px;
-  background: #EAEAEA;
-  opacity: 0.95;
-}
-.modal-front textarea {
-  width: 100%;
-  max-width: 540px;
-  min-height: 80px;
-}
-.modal-front input {
-  max-width: 540px;
-  width: 100%;
-}
-
-.modal-buttons {
+.country{
   text-align: center;
-  margin-top: 20px;
-  background: #4A1942;
+  font-weight: 300;
+}
+
+.history{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 2em;
+  margin-bottom: 10px;
+}
+
+button{
+  width: 70px;
+  height: 70px;
+}
+.equal-button{
+  width: 140px;
+  color: white;
+  background: none;
+  display: block;
+  border: none;
+  outline: none; 
+  font-size: 2em;
+}
+
+.calc-buttons{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.other-buttons{
+  display: flex;
+  flex-flow: column wrap;
+  width: 70px;
+  height: 280px;
+  background: #FF4081;
+}
+.tombol-lain{
+  color: #fafafa;
+  background: none;
+  display: block;
+  border: none;
+  outline: none;
+  font-size: 2em;
+}
+.allclear{
+  flex: 2;
+}
+
+.number-buttons{
+  display: flex;
+  flex-flow: row wrap;
+  width: 210px;
+  height: 280px;
+  background: #80D8FF;
+}
+.tombol-angka{
+  color: black;
+  background: none;
+  display: block;
+  border: none;
+  outline: none;
+  font-size: 2em;
+}
+.nol {
+  flex: 2;
+}
+
+.operator-buttons{
+  display: flex;
+  flex-flow: row wrap;
+  width: 140px;
+  height: 280px;
+  background: #E040FB;
+}
+.tombol-operator{
+  color: #fafafa;
+  background: none;
+  display: block;
+  border: none;
+  outline: none; 
+  font-size: 2em;
+}
+
+.footer {
+  font-family: 'Heebo', sans-serif;
+  font-size: 1.2em;
+  font-weight: 300;
+  text-align: center;
   padding: 20px;
-}
-
-#add-recipe {
-  background: #8C93A8;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  margin: 10px 40px;
-}
-#add-recipe input {
-  margin-right: 4px;
-  padding: 0 3px;
-}
-
-.note {
-  text-align: center;
-  color: #888;
-  margin-top: 10px;
 }
