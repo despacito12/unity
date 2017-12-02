@@ -1,16 +1,20 @@
 body {
-  width: 80px;
+	width: 100%; 
   height: auto;
   color: green;
   background: pink;
   margin: 0;
   padding: 0;
+ align-self: center;
+}
+#todoBox{
+
+  width:100%;
+  margin : auto;
 }
 
-}
 .vert-offset-top-0{
     margin-top: 0em;
-  
 }
 .vert-offset-top-2{
     margin-top: 2em;
