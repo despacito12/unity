@@ -10,57 +10,7 @@ var Note = function (_React$Component) {
   _inherits(Note, _React$Component);
 
   function Note() {
-    _classCallCheck(this, Note);
-
-    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
-  }
-
-  Note.prototype.render = function render() {
-    var style = {
-      backgroundColor: this.props.color
-    };
-    return React.createElement(
-      "div",
-      { className: "note", style: style },
-      this.props.children,
-      React.createElement(
-        "span",
-        { className: "note-delete", onClick: this.props.onDelete },
-        "x"
-      )
-    );
-  };
-
-  return Note;
-}(React.Component);
-
-var NoteEditor = function (_React$Component2) {
-  _inherits(NoteEditor, _React$Component2);
-
-  function NoteEditor(props) {
-    _classCallCheck(this, NoteEditor);
-
-    var _this2 = _possibleConstructorReturn(this, _React$Component2.call(this, props));
-
-    _this2.color = 'ff6680';
-    _this2.state = { text: '', color: _this2.color };
-    return _this2;
-  }
-
-  NoteEditor.prototype.handleChange = function handleChange(e) {
-    this.setState({ text: e.target.value });
-  };
-
-  NoteEditor.prototype.handleChangeColor = function handleChangeColor(e) {
-    this.setState({ color: e.target.value });
-  };
-
-  NoteEditor.prototype.render = function render() {
-    var _this3 = this;
-
-    return React.createElement(
-      "div",
-      { className: "note-editor" },
+    asa ka r" },
       React.createElement(
         "textarea",
         { placeholder: "Enter your note here...", onChange: this.handleChange.bind(this) },
