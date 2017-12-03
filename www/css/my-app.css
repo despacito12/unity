@@ -1,81 +1,53 @@
-:root {
-  --primary: #1C2025;
-  --secondary: #3BB0FF;
-  --negative: #ffffff;
-  --accent: rgba(50, 137, 197, .60);
-  
-  --transparent: rgba(0, 0, 0, 0);
-}
-
 body {
-  margin: 40px auto;
-  max-width: 650px;
-  line-height: 1.6;
-  font-size: 18px;
-  color: var(--primary);
-  padding: 0 10px;
-  background: #9CCDC4 ;
-  font-family: 'Courier', monospace;
+  background: #A1FFCE;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #FAFFD1, #A1FFCE);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #FAFFD1, #A1FFCE); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+h1 {
+  font-size: 60px;
+  margin-top: 120px;
   text-align: center;
-}
-  
-h1, h2, h3 {
-  font-family: 'Courier', monospace;
-  line-height: 1.2;
-  color: var(--primary);
-  border-bottom: 5px solid var(--secondary);
-  display: inline-block;
-  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-family: 'Lobster', cursive;
+  text-shadow: 2px 2px #68ffa6;
+  color: #68a2ff;
 }
 
-.wheels {
-  margin: 0 auto;
-  position: relative;
-  height: 300px;
+#todo {
+  margin-top: 20px;
 }
 
-#outer-wheel {
-  box-shadow: 9px 8px 12px rgba(0, 0, 0, 0.4);
-  background: var(--primary);
-  color: var(--negative);
+#nottodo {
+  margin-top: 20px;
 }
 
-#inner-wheel {
-  background: var(--negative);
-  border-color: var(--secondary);
+button {
+  margin-top: 15px;
+  border: 1px solid #68ffa6;
+  border-radius: 10px;
+  font-family: 'Lobster', cursive;
+  background-color: #68a2ff;
+  box-shadow: 2px 2px #68ffa6;
 }
 
-.absolute-centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translateX(-50%) translateY(-50%);
-          transform: translateX(-50%) translateY(-50%)
-}
-
-.shift-button {
-  border: 5px solid var(--primary);
-  border-radius: .3em;
-  font-size: 1.5em;
-  margin: 0.5em;
-  width: 3em;
-  background: var(--transparent);
-  cursor: pointer;
-  color: var(--secondary);
-  font-weight: bold;
-}
-
-.shift-button:hover {
-  -webkit-transition: .3s;
-  transition: .3s;
-  color: var(--primary);
-}
-.shift-button:focus {
+button:focus {
   outline: none;
 }
 
-.text-entry {
-  text-align: left;
-  display: inline-block;    
-  margin: 0 .6em;
+li {
+  font-size: 20px;
+}
+
+h3 {
+  margin-bottom: 20px;
+  font-family: 'Lobster', cursive;
+}
+
+h4, h5 {
+  font-family: 'Permanent Marker', cursive;
+}
+
+h5:hover {
+  cursor: pointer;
 }
