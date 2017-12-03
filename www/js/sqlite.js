@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6,233 +6,259 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var home = document.querySelector("#app");
+var todoItems = [{
+    name: 'Kiss Argel',
+    completed: true
+}, {
+    name: 'Pass the Exam',
+    completed: false
+}, {
+    name: 'Present to sir Rufo',
+    completed: false
+}];
 
-var ToDoItem = function (_React$Component) {
-  _inherits(ToDoItem, _React$Component);
+var App = function (_React$Component) {
+    _inherits(App, _React$Component);
 
-  function ToDoItem(props) {
-    _classCallCheck(this, ToDoItem);
+    function App(props) {
+        _classCallCheck(this, App);
 
-    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+        var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-    _this.state = {
-      complete: false
-    };
-    // this.handleDelete = this.handleDelete.bind(this);
-    _this.itsDone = _this.itsDone.bind(_this);
-    return _this;
-  }
-  // handleDelete() {
-  //   const { singleDelete, index, key } = this.props;
-  //   singleDelete(index, key);
-  // }
-
-  ToDoItem.prototype.itsDone = function itsDone() {
-    var _props = this.props;
-    var updateCompleteList = _props.updateCompleteList;
-    var item = _props.item;
-
-    item.doneStatus = !item.doneStatus;
-    this.setState({
-      complete: !this.state.complete
-    });
-    updateCompleteList(item);
-  };
-
-  ToDoItem.prototype.render = function render() {
-    return React.createElement(
-      "div",
-      { className: "card" },
-      React.createElement(
-        "label",
-        { className: "checkbox" },
-        React.createElement("input", { type: "checkbox", onClick: this.itsDone })
-      ),
-      React.createElement(
-        "div",
-        { className: "card-title" },
-        React.createElement(
-          "p",
-          { className: this.state.complete ? "struck" : "unstruck" },
-          this.props.task
-        )
-      ),
-      React.createElement("p", null)
-    );
-  };
-
-  return ToDoItem;
-}(React.Component);
-
-var DeleteButton = function DeleteButton(_ref) {
-  var bigDelete = _ref.bigDelete;
-  return React.createElement(
-    "button",
-    { type: "submit", className: "button is-danger", onClick: bigDelete },
-    "Delete"
-  );
-};
-
-var ToDoList = function (_React$Component2) {
-  _inherits(ToDoList, _React$Component2);
-
-  function ToDoList(props) {
-    _classCallCheck(this, ToDoList);
-
-    var _this2 = _possibleConstructorReturn(this, _React$Component2.call(this, props));
-
-    _this2.state = {
-      tasks: [],
-      doneTasks: [],
-      entry: ""
-    };
-    _this2.addItem = _this2.addItem.bind(_this2);
-    _this2.updateEntry = _this2.updateEntry.bind(_this2);
-    // this.singleDelete = this.singleDelete.bind(this);
-    _this2.bigDelete = _this2.bigDelete.bind(_this2);
-    _this2.updateCompleteList = _this2.updateCompleteList.bind(_this2);
-    return _this2;
-  }
-
-  ToDoList.prototype.addItem = function addItem(event) {
-    var taskArray = this.state.tasks;
-    if (this.state.entry !== "") {
-      taskArray.push({
-        text: this.state.entry,
-        key: Date.now(),
-        doneStatus: false
-      });
-      this.setState({
-        tasks: taskArray,
-        entry: ""
-      });
+        _this.state = { todoItems: todoItems };
+        return _this;
     }
-    event.preventDefault();
-  };
 
-  ToDoList.prototype.updateEntry = function updateEntry(event) {
-    this.setState({
-      entry: event.target.value
-    });
-  };
-  //BUG: SingleDelete is clearing doneTasks state; "doneTasks" state is empty, and remaing checked items cannot be bigDeleted. Key is undefined here.
-  // singleDelete(index, key) {
-  //   const doneTasksArray = [...this.state.doneTasks];
-  //   this.state.tasks.splice(index, 1);
-  //   const isNotDeleted = task => task.key !== key;
-  //   const scrubbedArray = doneTasksArray.filter(isNotDeleted);
-  //   console.log(this.state.doneTasks);
-  //   this.setState(
-  //     {
-  //       tasks: this.state.tasks,
-  //       doneTasks: scrubbedArray
-  //     },
-  //     console.log(this.state.doneTasks)
-  //   );
-  // }
+    App.prototype.render = function render() {
+        var _this2 = this;
 
-  ToDoList.prototype.bigDelete = function bigDelete() {
-    var _state = this.state;
-    var tasks = _state.tasks;
-    var doneTasks = _state.doneTasks;
-
-    var allTasks = [].concat(tasks, doneTasks);
-    var scrubber = function scrubber(task) {
-      if (tasks.indexOf(task) === -1 || doneTasks.indexOf(task) === -1) {
-        return task;
-      }
+        var items = this.state.todoItems;
+        items = items.map(function (item, index) {
+            return React.createElement(TodoItem, { item: item, key: index, onDelete: _this2.onDelete.bind(_this2), onSave: _this2.onSave.bind(_this2), toggleComplete: _this2.toggleComplete.bind(_this2) });
+        });
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h1',
+                { className: 'header' },
+                ' My to do List '
+            ),
+            React.createElement(AddItem, { onAdd: this.onAdd.bind(this), items: this.state.todoItems }),
+            React.createElement(
+                'ul',
+                { className: 'todo-list' },
+                items
+            )
+        );
     };
-    var scrubbedArray = allTasks.filter(scrubber);
-    this.setState({
-      tasks: scrubbedArray,
-      doneTasks: []
-    }, console.log(this.state.doneTasks));
-  };
 
-  ToDoList.prototype.updateCompleteList = function updateCompleteList(item) {
-    var updatedDoneTasks = this.state.doneTasks;
-    if (item.doneStatus === true) {
-      updatedDoneTasks.push(item);
-    } else {
-      updatedDoneTasks = updatedDoneTasks.filter(function (task) {
-        return task !== item;
-      });
+    App.prototype.onDelete = function onDelete(item) {
+        var updatedItems = this.state.todoItems;
+        updatedItems = updatedItems.filter(function (value, index) {
+            return item !== value;
+        });
+        this.setState({
+            todoItems: updatedItems
+        });
+    };
+
+    App.prototype.onAdd = function onAdd(newTaskName) {
+        var updatedItems = this.state.todoItems;
+        updatedItems.push({
+            name: newTaskName,
+            completed: false
+        });
+        this.setState({
+            todoItems: updatedItems
+        });
+    };
+
+    App.prototype.onSave = function onSave(oldItem, newName) {
+        var thisItem = this.state.todoItems.filter(function (item) {
+            return item === oldItem;
+        })[0];
+        thisItem.name = newName;
+        this.setState({
+            todoItems: this.state.todoItems
+        });
+    };
+
+    App.prototype.toggleComplete = function toggleComplete(clickedItem) {
+        var thisItem = this.state.todoItems.filter(function (item) {
+            return item === clickedItem;
+        })[0];
+        thisItem.completed = !thisItem.completed;
+        this.setState({
+            todoItems: this.state.todoItems
+        });
+    };
+
+    return App;
+}(React.Component);
+
+var AddItem = function (_React$Component2) {
+    _inherits(AddItem, _React$Component2);
+
+    function AddItem(props) {
+        _classCallCheck(this, AddItem);
+
+        var _this3 = _possibleConstructorReturn(this, _React$Component2.call(this, props));
+
+        _this3.state = {
+            infoMessage: ''
+        };
+        return _this3;
     }
-    this.setState({
-      doneTasks: updatedDoneTasks
-    }, console.log(updatedDoneTasks));
-  };
 
-  ToDoList.prototype.render = function render() {
-    var _this3 = this;
+    AddItem.prototype.render = function render() {
+        return React.createElement(
+            'form',
+            { className: 'add-item-form', onSubmit: this.handleSubmit.bind(this) },
+            React.createElement('input', { className: 'add-item-input', type: 'text', placeholder: 'a new task to do...', ref: 'newItem' }),
+            React.createElement('input', { className: 'add-item-button', type: 'submit', value: 'add' }),
+            React.createElement(
+                'p',
+                { className: 'add-item-info' },
+                ' ',
+                this.state.infoMessage,
+                ' '
+            )
+        );
+    };
 
-    return React.createElement(
-      "div",
-      { className: "todoList" },
-      React.createElement(
-        "p",
-        { className: "task-counter" },
-        "Completed tasks: ",
-        this.state.doneTasks.length
-      ),
-      React.createElement(
-        "form",
-        { onSubmit: this.addItem },
-        React.createElement("input", {
-          type: "text",
-          className: "input is-info",
-          placeholder: "Enter task...",
-          value: this.state.entry,
-          onChange: this.updateEntry,
-          maxlength: "50"
-        }),
-        React.createElement(
-          "button",
-          {
-            type: "submit",
-            className: "button is-info",
-            onClick: this.addItem
-          },
-          "Add"
-        ),
-        React.createElement(DeleteButton, { bigDelete: this.bigDelete })
-      ),
-      React.createElement(
-        "div",
-        null,
-        this.state.tasks.map(function (item, index) {
-          return React.createElement(ToDoItem, {
-            item: item,
-            index: index,
-            key: item.key,
-            task: item.text,
-            doneStatus: item.doneStatus,
-            singleDelete: _this3.singleDelete,
-            updateCompleteList: _this3.updateCompleteList
-          });
-        })
-      )
-    );
-  };
+    AddItem.prototype.handleSubmit = function handleSubmit(e) {
+        e.preventDefault();
+        var value = this.refs.newItem.value;
+        var isInList = this.props.items.filter(function (item) {
+            return item.name.toUpperCase() == value.toUpperCase();
+        }).length;
+        console.log(isInList);
 
-  return ToDoList;
+        if (!value) {
+            this.setState({
+                infoMessage: 'you want to add an empty task?'
+            });
+        } else if (isInList) {
+            this.setState({
+                infoMessage: 'this task already exists!'
+            });
+        } else {
+            this.props.onAdd(value);
+            this.refs.newItem.value = '';
+            this.setState({
+                infoMessage: ''
+            });
+        }
+    };
+
+    return AddItem;
 }(React.Component);
 
-var App = function (_React$Component3) {
-  _inherits(App, _React$Component3);
+var TodoItem = function (_React$Component3) {
+    _inherits(TodoItem, _React$Component3);
 
-  function App() {
-    _classCallCheck(this, App);
+    function TodoItem(props) {
+        _classCallCheck(this, TodoItem);
 
-    return _possibleConstructorReturn(this, _React$Component3.apply(this, arguments));
-  }
+        var _this4 = _possibleConstructorReturn(this, _React$Component3.call(this, props));
 
-  App.prototype.render = function render() {
-    return React.createElement(ToDoList, null);
-  };
+        _this4.state = {
+            editing: false
+        };
+        return _this4;
+    }
 
-  return App;
+    TodoItem.prototype.render = function render() {
+        return React.createElement(
+            'li',
+            { className: 'todo-item' },
+            this.renderTodoItem()
+        );
+    };
+
+    TodoItem.prototype.renderTodoItem = function renderTodoItem() {
+        var isCompleted = this.props.item.completed;
+
+        if (this.state.editing) {
+            return React.createElement(
+                'form',
+                { className: 'todo-item-wrapper', onSubmit: this.handleSave.bind(this) },
+                React.createElement('input', { className: 'editing-form-input', type: 'text', ref: 'editingItem', defaultValue: this.props.item.name, onFocus: this.handleFocus.bind(this), autoFocus: true }),
+                this.renderButtons()
+            );
+        }
+
+        return React.createElement(
+            'div',
+            { className: 'todo-item-wrapper' },
+            React.createElement(
+                'p',
+                { className: isCompleted ? 'todo-item-name--completed' : 'todo-item-name', onClick: this.props.toggleComplete.bind(this, this.props.item) },
+                this.props.item.name
+            ),
+            this.renderButtons()
+        );
+    };
+
+    TodoItem.prototype.renderButtons = function renderButtons() {
+        if (this.state.editing) {
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'button',
+                    { className: 'button', type: 'button', onClick: this.handleSave.bind(this) },
+                    ' save '
+                ),
+                React.createElement(
+                    'button',
+                    { className: 'button', type: 'button', onClick: this.onCancel.bind(this) },
+                    ' cancel '
+                )
+            );
+        }
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'button',
+                { className: 'button', type: 'button', onClick: this.onEdit.bind(this) },
+                ' edit '
+            ),
+            React.createElement(
+                'button',
+                { className: 'button', type: 'button', onClick: this.props.onDelete.bind(this, this.props.item) },
+                ' delete '
+            )
+        );
+    };
+
+    TodoItem.prototype.onEdit = function onEdit() {
+        this.setState({
+            editing: true
+        });
+    };
+
+    TodoItem.prototype.onCancel = function onCancel() {
+        this.setState({
+            editing: false
+        });
+    };
+
+    TodoItem.prototype.handleSave = function handleSave(e) {
+        e.preventDefault();
+        this.setState({
+            editing: false
+        });
+        this.props.onSave(this.props.item, this.refs.editingItem.value);
+    };
+
+    TodoItem.prototype.handleFocus = function handleFocus(e) {
+        e.target.select();
+    };
+
+    return TodoItem;
 }(React.Component);
 
-ReactDOM.render(React.createElement(App, null), home);
+ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
