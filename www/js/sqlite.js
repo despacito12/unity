@@ -1,6 +1,4 @@
-'use strict';
-
-var _class, _temp;
+"use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8,433 +6,222 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var R = R;
-var React = React;
-var ReactDOM = ReactDOM;
-var Immutable = Immutable;
-var domContainerNode = document.getElementById('react-app');
+var App = function (_React$Component) {
+  _inherits(App, _React$Component);
 
-var Redux = Redux;
-var _ReactRedux = ReactRedux;
-var Provider = _ReactRedux.Provider;
+  function App(props) {
+    _classCallCheck(this, App);
 
-var thunkMiddleware = ReduxThunk.default;
-var _ReactReduxConnectHel = ReactReduxConnectHelpers;
-var connectStateValue = _ReactReduxConnectHel.connectStateValue;
-var connectValue = _ReactReduxConnectHel.connectValue;
-var createActionConnector = _ReactReduxConnectHel.createActionConnector;
+    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-/* Encryption Helpers */
-
-var ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
-
-var letterIndexes = ALPHABET.reduce(function (acc, letter, i) {
-  acc[letter] = i;
-  return acc;
-}, {});
-
-var isUpperCase = function isUpperCase(str) {
-  return R.equals(str, R.toUpper(str));
-};
-
-var normalizeShift = function normalizeShift(shift) {
-  return shift < 0 ? 26 - -shift % 26 : shift % 26;
-};
-
-var makeEncoder = function makeEncoder(shift) {
-  return ALPHABET.reduce(function (acc, letter) {
-    var letterIndex = letterIndexes[letter];
-    var encryptedLetter = ALPHABET[(letterIndex + shift) % ALPHABET.length];
-    acc[letter] = encryptedLetter;
-    return acc;
-  }, {});
-};
-
-var encryptMessage = function encryptMessage() {
-  var shift = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-  var message = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
-
-  var encoder = R.compose(makeEncoder, normalizeShift)(shift);
-  var encryptedMessage = message.split('').map(function (char) {
-    var key = R.toLower(char);
-    if (encoder[key]) {
-      return isUpperCase(char) ? R.toUpper(encoder[key]) : encoder[key];
-    }
-    return char;
-  }).join('');
-
-  return encryptedMessage;
-};
-
-var decryptMessage = function decryptMessage() {
-  var shift = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-  var message = arguments[1];
-
-  var inverseShift = ALPHABET.length - shift;
-  return encryptMessage(inverseShift, message);
-};
-
-/* Redux */
-var initialState = Immutable.fromJS({
-  shift: 1,
-  message: '', // 'Attack at dawn!',
-  encrypted: '', // 'Buubdl bu ebxo!',
-  highlighted: null
-});
-
-var actionTypes = {
-  CHANGE_SHIFT: 'CHANGE_SHIFT',
-  CHANGE_MESSAGE: 'CHANGE_MESSAGE',
-  CHANGE_ENCRYPTED: 'CHANGE_ENCRYPTED',
-  CHANGE_HIGHLIGHTED: 'CHANGE_HIGHLIGHED'
-};
-
-var actionCreators = {
-  changeShift: function changeShift(shift) {
-    return {
-      type: actionTypes.CHANGE_SHIFT,
-      payload: shift
-    };
-  },
-  changeMessage: function changeMessage(message) {
-    return {
-      type: actionTypes.CHANGE_MESSAGE,
-      payload: message
-    };
-  },
-  changeEncrypted: function changeEncrypted(message) {
-    return {
-      type: actionTypes.CHANGE_ENCRYPTED,
-      payload: message
-    };
-  },
-  changeHighlighted: function changeHighlighted(letter) {
-    return {
-      type: actionTypes.CHANGE_HIGHLIGHTED,
-      payload: letter
-    };
-  }
-};
-
-var rootReducer = function rootReducer() {
-  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-  var _ref = arguments[1];
-  var type = _ref.type;
-  var payload = _ref.payload;
-
-  switch (type) {
-    case actionTypes.CHANGE_SHIFT:
-      return state.set('shift', payload).set('encrypted', encryptMessage(payload, state.get('message')));
-    case actionTypes.CHANGE_MESSAGE:
-      return state.set('message', payload).set('encrypted', encryptMessage(state.get('shift'), payload));
-    case actionTypes.CHANGE_ENCRYPTED:
-      return state.set('encrypted', payload).set('message', decryptMessage(state.get('shift'), payload));
-    case actionTypes.CHANGE_HIGHLIGHTED:
-      return state.set('highlighted', payload);
-    default:
-      return state;
-  }
-};
-
-var thunk = thunkMiddleware;
-var logger = window.reduxLogger({
-  collapsed: true,
-  stateTransformer: function stateTransformer(state) {
-    return state.toJS();
-  },
-  diff: true
-});
-var middleware = Redux.applyMiddleware(thunk, logger);
-
-var store = Redux.createStore(rootReducer, initialState, middleware);
-var connectAction = createActionConnector(actionCreators);
-
-var TextWheel = function TextWheel(props) {
-  var id = props.id;
-  var shift = props.shift;
-  var text = props.text;
-  var textColor = props.textColor;
-  var border = props.border;
-  var showBorder = props.showBorder;
-  var diameter = props.diameter;
-  var onSpokeHover = props.onSpokeHover;
-
-  var chars = props.text.split('');
-
-  var spokeWidth = diameter / chars.length;
-  var spokeHeight = diameter / 2;
-  var spokeLeft = diameter / 2 - spokeWidth / 2;
-  var spokeAngle = 360 / chars.length;
-
-  return React.createElement(
-    'div',
-    {
-      id: props.id,
-      className: 'wheel',
-      style: {
-        width: diameter + 'px',
-        height: diameter + 'px',
-        border: border,
-        borderStyle: showBorder ? 'solid' : 'hidden',
-        borderRadius: '50%',
-        position: 'relative',
-        transform: 'rotate(' + -shift * spokeAngle + 'deg)',
-        transition: '.3s ease'
-      }
-    },
-    chars.map(function (char, i) {
-      return React.createElement(
-        'div',
-        {
-          key: i,
-          className: 'spoke'
-          // onHover={onSpokeHover}
-          , style: {
-            width: spokeWidth + 'px',
-            height: spokeHeight + 'px',
-            textAlign: 'center',
-            position: 'absolute',
-            left: spokeLeft + 'px',
-            display: 'inline-block',
-            transform: 'rotate(' + i * spokeAngle + 'deg)',
-            transformOrigin: 'bottom center',
-            fontFamily: 'inherit'
-          }
-        },
-        char
-      );
-    })
-  );
-};
-
-TextWheel.defaultProps = {
-  shift: 0,
-  text: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  textColor: 'black',
-  border: '5px solid #3BB0FF',
-  showBorder: true,
-  diameter: 260,
-  onSpokeHover: function onSpokeHover(n) {
-    return n;
-  }
-};
-
-TextWheel.propTypes = {
-  shift: React.PropTypes.number,
-  text: React.PropTypes.string,
-  textColor: React.PropTypes.string,
-  border: React.PropTypes.string,
-  showBorder: React.PropTypes.bool,
-  diameter: React.PropTypes.number,
-  onSpokeHover: React.PropTypes.func
-};
-
-var ShiftDisplay = function ShiftDisplay(_ref2) {
-  var shift = _ref2.shift;
-  return React.createElement(
-    'h2',
-    null,
-    normalizeShift(shift)
-  );
-};
-
-var ShiftButtonDisplay = function ShiftButtonDisplay(_ref3) {
-  var changeShift = _ref3.changeShift;
-  var shift = _ref3.shift;
-  var direction = _ref3.direction;
-  return React.createElement(
-    'button',
-    { className: 'shift-button', onClick: function onClick() {
-        changeShift(shift + direction);
-      } },
-    direction > 0 ? '→' : '←'
-  );
-};
-
-var Textarea = (_temp = _class = function (_React$Component) {
-  _inherits(Textarea, _React$Component);
-
-  function Textarea(props, context) {
-    _classCallCheck(this, Textarea);
-
-    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props, context));
-
-    _this.toggleFocus = _this.toggleFocus.bind(_this);
-    _this.handleScroll = _this.handleScroll.bind(_this);
-    _this.handleChange = _this.handleChange.bind(_this);
     _this.state = {
-      isFocused: false,
-      message: props.children || props.value
+      todo: [],
+      nottodo: []
     };
     return _this;
   }
 
-  Textarea.prototype.toggleFocus = function toggleFocus() {
-    this.setState({ isFocused: !this.state.isFocused });
+  App.prototype.todoClicked2 = function todoClicked2(todo) {
+    var joined = this.state.todo.concat(todo);
+    this.setState({ todo: joined });
   };
 
-  Textarea.prototype.handleScroll = function handleScroll(e) {
-    this._textarea.scrollTop = e.target.scrollTop;
+  App.prototype.nottodoClicked2 = function nottodoClicked2(nottodo) {
+    var joined = this.state.nottodo.concat(nottodo);
+    this.setState({ nottodo: joined });
   };
 
-  Textarea.prototype.handleChange = function handleChange(e) {
-    var _this2 = this;
-
-    var message = e.target.value;
-    this.setState({ message: message }, function () {
-      return _this2.props.onChange(message);
-    });
+  App.prototype.deleteFromTodo = function deleteFromTodo(index) {
+    this.state.todo.splice(index, 1);
+    this.setState({ todo: this.state.todo });
   };
 
-  Textarea.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-    if (this.state.message !== nextProps.value) {
-      this.setState({ message: nextProps.value });
-    }
+  App.prototype.deleteFromNotTodo = function deleteFromNotTodo(index) {
+    this.state.nottodo.splice(index, 1);
+    this.setState({ nottodo: this.state.nottodo });
   };
 
-  Textarea.prototype.render = function render() {
+  App.prototype.render = function render() {
+    return React.createElement(
+      "div",
+      { className: "container" },
+      React.createElement(Input, { todoClicked: this.todoClicked2.bind(this), nottodoClicked: this.nottodoClicked2.bind(this) }),
+      React.createElement(
+        "div",
+        { className: "row" },
+        React.createElement(Todo, { todos: this.state.todo, deleteItem: this.deleteFromTodo.bind(this) }),
+        React.createElement(NotTodo, { nottodos: this.state.nottodo, deleteItem: this.deleteFromNotTodo.bind(this) })
+      )
+    );
+  };
+
+  return App;
+}(React.Component);
+
+var Input = function (_React$Component2) {
+  _inherits(Input, _React$Component2);
+
+  function Input(props) {
+    _classCallCheck(this, Input);
+
+    var _this2 = _possibleConstructorReturn(this, _React$Component2.call(this, props));
+
+    _this2.state = {
+      value: ''
+    };
+    return _this2;
+  }
+
+  Input.prototype.typingFunc = function typingFunc(value) {
+    this.setState({ value: value });
+  };
+
+  Input.prototype.todoClick = function todoClick() {
+    this.props.todoClicked(this.state.value);
+    this.setState({ value: "" });
+  };
+
+  Input.prototype.nottodoClick = function nottodoClick() {
+    this.props.nottodoClicked(this.state.value);
+    this.setState({ value: "" });
+  };
+
+  Input.prototype.render = function render() {
     var _this3 = this;
 
-    var size = 'calc(100% - ' + parseInt(this.props.padding) * 2 + 'px';
+    return React.createElement(
+      "div",
+      { className: "form-group" },
+      React.createElement(
+        "h1",
+        { className: "text-center" },
+        "Type the todo or not-todo:"
+      ),
+      React.createElement(
+        "div",
+        { className: "row" },
+        React.createElement("input", { value: this.state.value, onChange: function onChange(event) {
+            return _this3.typingFunc(event.target.value);
+          }, type: "text", className: "form-control col-md-8 offset-md-2", id: "inp" })
+      ),
+      React.createElement(
+        "div",
+        { className: "row" },
+        React.createElement(
+          "button",
+          { className: "col-md-2 offset-md-3", onClick: this.todoClick.bind(this) },
+          "TODO"
+        ),
+        React.createElement(
+          "button",
+          { className: "col-md-2 offset-md-2", onClick: this.nottodoClick.bind(this) },
+          "NOT-TODO"
+        )
+      )
+    );
+  };
+
+  return Input;
+}(React.Component);
+
+var Todo = function (_React$Component3) {
+  _inherits(Todo, _React$Component3);
+
+  function Todo(props) {
+    _classCallCheck(this, Todo);
+
+    return _possibleConstructorReturn(this, _React$Component3.call(this, props));
+  }
+
+  Todo.prototype.render = function render() {
+    var _this5 = this;
 
     return React.createElement(
-      'div',
-      {
-        style: { border: '5px solid #1C2025', borderRadius: '.3em', position: 'relative', width: this.props.width, height: this.props.height, margin: '0 auto', top: 0, left: 0, whiteSpace: 'inherit-wrap', wordWrap: 'break-word' }
-      },
+      "div",
+      { className: "col-md-4 offset-md-1", id: "todo" },
       React.createElement(
-        'div',
-        {
-          ref: function ref(_textarea) {
-            _this3._textarea = _textarea;
-          },
-          style: { pointerEvents: 'none', position: 'absolute', padding: this.props.padding, textAlign: 'left', whiteSpace: 'pre-wrap', width: size, height: size, overflowY: 'scroll' }
-        },
-        this.state.message && this.state.message.length ? this.state.message.split(this.props.highlightSelection).reduce(function (acc, curr, i, arr) {
-          acc.push(curr);
-          if (i < arr.length - 1) {
-            acc.push(React.createElement(
-              'span',
-              {
-                key: i,
-                style: _this3.props.highlightStyle
-              },
-              _this3.props.highlightSelection
-            ));
-          }
-          return acc;
-        }, []) : React.createElement(
-          'span',
-          { style: { opacity: 0.5 } },
-          this.state.isFocused ? '' : this.props.placeholder
-        )
+        "h3",
+        { className: "text-center" },
+        "DO IT!"
       ),
-      React.createElement('textarea', {
-        style: { width: size, height: size, padding: this.props.padding, margin: 0, background: 'rgba(0, 0, 0, 0)', outline: 'none', resize: 'none', positon: 'absolute', right: this.props.padding, fontSize: '1em', fontFamily: 'inherit', WebkitTextFillColor: 'transparent', textShadow: '0px 0px 0px rgba(0, 0, 0, 0)', lineHeight: 'inherit', border: 'none' },
-        value: this.state.message,
-        onBlur: this.toggleFocus,
-        onFocus: this.toggleFocus,
-        onChange: this.handleChange,
-        onScroll: this.handleScroll,
-        disabled: this.props.disabled,
-        spellCheck: this.props.spellcheck
+      this.props.todos.map(function (todo, index) {
+        return React.createElement(
+          "div",
+          { className: "row" },
+          React.createElement(
+            "h4",
+            { className: "animated bounceInLeft col-md-8" },
+            todo
+          ),
+          React.createElement(
+            "h5",
+            { className: "col-md-4 animated bounceInLeft", onClick: function onClick() {
+                return _this5.props.deleteItem(index);
+              } },
+            "x"
+          )
+        );
       })
     );
   };
 
-  return Textarea;
-}(React.Component), _class.propTypes = {
-  onChange: React.PropTypes.func
-}, _class.defaultProps = {
-  width: '12em',
-  height: '6em',
-  padding: '5px',
-  disabled: false,
-  spellcheck: false,
-  onChange: function onChange() {
-    return null;
+  return Todo;
+}(React.Component);
+
+var NotTodo = function (_React$Component4) {
+  _inherits(NotTodo, _React$Component4);
+
+  function NotTodo(props) {
+    _classCallCheck(this, NotTodo);
+
+    return _possibleConstructorReturn(this, _React$Component4.call(this, props));
   }
-}, _temp);
 
-var OuterWheel = R.compose(connectValue('outer-wheel', 'id'), connectValue(false, 'showBorder'))(
-// connectAction('changeHighlighted', 'onSpokeHover')
-TextWheel);
+  NotTodo.prototype.render = function render() {
+    var _this7 = this;
 
-var InnerWheel = R.compose(connectValue('inner-wheel', 'id'), connectValue(200, 'diameter'), connectStateValue('shift'))(TextWheel);
-
-var Shift = R.compose(connectStateValue('shift'))(ShiftDisplay);
-
-var ShiftLeftButton = R.compose(connectValue(-1, 'direction'), connectStateValue('shift'), connectAction('changeShift'))(ShiftButtonDisplay);
-
-var ShiftRightButton = R.compose(connectValue(1, 'direction'), connectStateValue('shift'), connectAction('changeShift'))(ShiftButtonDisplay);
-
-var Message = R.compose(connectValue('Write your message', 'placeholder'), connectStateValue('message', 'value'), connectAction('changeMessage', 'onChange'))(Textarea);
-
-var Encrypted = R.compose(connectValue('Encrypted message', 'placeholder'), connectStateValue('encrypted', 'value'), connectAction('changeEncrypted', 'onChange'))(Textarea);
-
-var MainDisplay = function MainDisplay(props) {
-  return React.createElement(
-    'main',
-    null,
-    React.createElement(
-      'h1',
-      null,
-      'Caesar Cipher'
-    ),
-    React.createElement(
-      'div',
-      { className: 'wheels' },
+    return React.createElement(
+      "div",
+      { className: "col-md-4 offset-md-2", id: "nottodo" },
       React.createElement(
-        'div',
-        { className: 'absolute-centered' },
-        React.createElement(OuterWheel, null)
+        "h3",
+        { className: "text-center" },
+        "DON'T DO IT!"
       ),
-      React.createElement(
-        'div',
-        { className: 'absolute-centered' },
-        React.createElement(InnerWheel, null)
-      ),
-      React.createElement(
-        'div',
-        { className: 'absolute-centered' },
-        React.createElement(Shift, null)
-      )
-    ),
-    React.createElement(
-      'div',
-      { className: 'controls' },
-      React.createElement(ShiftLeftButton, null),
-      React.createElement(ShiftRightButton, null)
-    ),
-    React.createElement(
-      'div',
-      { className: 'text-entry' },
-      React.createElement(
-        'h3',
-        null,
-        'Plaintext:'
-      ),
-      React.createElement(Message, null)
-    ),
-    React.createElement(
-      'div',
-      { className: 'text-entry' },
-      React.createElement(
-        'h3',
-        null,
-        'Encrypted:'
-      ),
-      React.createElement(Encrypted, null)
-    )
-  );
-};
+      this.props.nottodos.map(function (nottodo, index) {
+        return React.createElement(
+          "div",
+          { className: "row" },
+          React.createElement(
+            "h4",
+            { className: "animated bounceInRight col-md-8" },
+            nottodo
+          ),
+          React.createElement(
+            "h5",
+            { className: "col-md-4 animated bounceInRight", onClick: function onClick() {
+                return _this7.props.deleteItem(index);
+              } },
+            "x"
+          )
+        );
+      })
+    );
+  };
 
-var App = function App(props) {
-  return React.createElement(
-    Provider,
-    { store: store },
-    React.createElement(MainDisplay, null)
-  );
-};
+  return NotTodo;
+}(React.Component);
 
-ReactDOM.render(React.createElement(App, null), domContainerNode);
+var RemoveTodo = function (_React$Component5) {
+  _inherits(RemoveTodo, _React$Component5);
+
+  function RemoveTodo() {
+    _classCallCheck(this, RemoveTodo);
+
+    return _possibleConstructorReturn(this, _React$Component5.apply(this, arguments));
+  }
+
+  return RemoveTodo;
+}(React.Component);
+
+ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
