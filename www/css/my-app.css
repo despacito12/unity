@@ -1,92 +1,46 @@
-.bd {
-  background: violet;
-  }
-  .main-container {
-  width: 600px;
-  //height: 100px;
-  margin: auto;
-  background-color: darkgreen;
-  border:solid 3px black;
-  padding-bottom:70px;
-  border-radius: 7px;
-}
-
-.header-div {
-  width: 100%;
-  height: 85px;
-  text-align: center;
-  font-size: 4.5em;
-  background-color:lightgreen;
-  border-bottom: solid 2px black;
-  color: black;
-  border-radius: 4px 4px 0px 0px;
-}
-
-.input-div {
-  margin: auto;
-  padding: 30px;
-  width:80%;
-  text-align: center; 
-}
-
-#add-item-input {
-  margin: 10px;
-  border-radius:7px;
-  font-size: 1.5em;
-}
-
-#add-item-submit {
-  height: 24px;
-  border-radius:7px;
-}
-
-.todo-items {
-  position: relative;
-  width:40%;
-  height: 30px;
-  background: silver;
-  border: solid 1px black;
-  border-radius: 10px;
-  margin: 30px auto;
-  text-align: center;
-  padding: 5px;
-  font-size: 1.3em;
-}
-.item-clickable {
-  position: absolute;
-  top:0;
-  left: 0;
-  width: 100%;
+html {
   height: 100%;
-  opacity: .0;
-  background: white;
+  background-color: #66ccff;
 }
-
-.count-div {
-  display:flex;
-  justify-content: flex-end;
+.title {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  height: 50px;
-  border-radius: 40px;
-  background: green;
-  padding: 10px;
-  font-size: 1.1;
+}
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px;
+}
+.input {
+  width: 500px;
+}
+.button {
+  margin-left: 11px;
+}
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #82cdff;
+  margin: 5px;
+  padding: 5px;
+  border: blue 1px solid;
+  color: black;
+  max-width: 490px;
+  flex-wrap: wrap;
+}
+.checkbox input{
+  height: 20px;
+  width: 20px;
+}
+.struck {
+  text-decoration: line-through;
+  flex-wrap: wrap;
+}
+.unstruck {
+  text-decoration: none;
   font-weight: bold;
-}
-
-.count-div > span {
-  padding: 2px;
-}
-
-.count-display {
-  float:right;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  text-align: center;
-  background: silver;
-}
-
-.count-text {
-  font-size: 3em;
+  flex-wrap: wrap;
 }
