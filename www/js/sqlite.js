@@ -6,222 +6,179 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var App = function (_React$Component) {
-  _inherits(App, _React$Component);
+var Note = function (_React$Component) {
+  _inherits(Note, _React$Component);
 
-  function App(props) {
-    _classCallCheck(this, App);
+  function Note() {
+    _classCallCheck(this, Note);
 
-    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
-
-    _this.state = {
-      todo: [],
-      nottodo: []
-    };
-    return _this;
+    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
   }
 
-  App.prototype.todoClicked2 = function todoClicked2(todo) {
-    var joined = this.state.todo.concat(todo);
-    this.setState({ todo: joined });
-  };
-
-  App.prototype.nottodoClicked2 = function nottodoClicked2(nottodo) {
-    var joined = this.state.nottodo.concat(nottodo);
-    this.setState({ nottodo: joined });
-  };
-
-  App.prototype.deleteFromTodo = function deleteFromTodo(index) {
-    this.state.todo.splice(index, 1);
-    this.setState({ todo: this.state.todo });
-  };
-
-  App.prototype.deleteFromNotTodo = function deleteFromNotTodo(index) {
-    this.state.nottodo.splice(index, 1);
-    this.setState({ nottodo: this.state.nottodo });
-  };
-
-  App.prototype.render = function render() {
+  Note.prototype.render = function render() {
+    var style = {
+      backgroundColor: this.props.color
+    };
     return React.createElement(
       "div",
-      { className: "container" },
-      React.createElement(Input, { todoClicked: this.todoClicked2.bind(this), nottodoClicked: this.nottodoClicked2.bind(this) }),
+      { className: "note", style: style },
+      this.props.children,
       React.createElement(
-        "div",
-        { className: "row" },
-        React.createElement(Todo, { todos: this.state.todo, deleteItem: this.deleteFromTodo.bind(this) }),
-        React.createElement(NotTodo, { nottodos: this.state.nottodo, deleteItem: this.deleteFromNotTodo.bind(this) })
+        "span",
+        { className: "note-delete", onClick: this.props.onDelete },
+        "x"
       )
     );
   };
 
-  return App;
+  return Note;
 }(React.Component);
 
-var Input = function (_React$Component2) {
-  _inherits(Input, _React$Component2);
+var NoteEditor = function (_React$Component2) {
+  _inherits(NoteEditor, _React$Component2);
 
-  function Input(props) {
-    _classCallCheck(this, Input);
+  function NoteEditor(props) {
+    _classCallCheck(this, NoteEditor);
 
     var _this2 = _possibleConstructorReturn(this, _React$Component2.call(this, props));
 
-    _this2.state = {
-      value: ''
-    };
+    _this2.color = 'ff6680';
+    _this2.state = { text: '', color: _this2.color };
     return _this2;
   }
 
-  Input.prototype.typingFunc = function typingFunc(value) {
-    this.setState({ value: value });
+  NoteEditor.prototype.handleChange = function handleChange(e) {
+    this.setState({ text: e.target.value });
   };
 
-  Input.prototype.todoClick = function todoClick() {
-    this.props.todoClicked(this.state.value);
-    this.setState({ value: "" });
+  NoteEditor.prototype.handleChangeColor = function handleChangeColor(e) {
+    this.setState({ color: e.target.value });
   };
 
-  Input.prototype.nottodoClick = function nottodoClick() {
-    this.props.nottodoClicked(this.state.value);
-    this.setState({ value: "" });
-  };
-
-  Input.prototype.render = function render() {
+  NoteEditor.prototype.render = function render() {
     var _this3 = this;
 
     return React.createElement(
       "div",
-      { className: "form-group" },
+      { className: "note-editor" },
       React.createElement(
-        "h1",
-        { className: "text-center" },
-        "Type the todo or not-todo:"
+        "textarea",
+        { placeholder: "Enter your note here...", onChange: this.handleChange.bind(this) },
+        this.state.text
       ),
+      React.createElement("input", { className: "jscolor", value: this.state.color, onBlur: this.handleChangeColor.bind(this) }),
       React.createElement(
-        "div",
-        { className: "row" },
-        React.createElement("input", { value: this.state.value, onChange: function onChange(event) {
-            return _this3.typingFunc(event.target.value);
-          }, type: "text", className: "form-control col-md-8 offset-md-2", id: "inp" })
-      ),
-      React.createElement(
-        "div",
-        { className: "row" },
-        React.createElement(
-          "button",
-          { className: "col-md-2 offset-md-3", onClick: this.todoClick.bind(this) },
-          "TODO"
-        ),
-        React.createElement(
-          "button",
-          { className: "col-md-2 offset-md-2", onClick: this.nottodoClick.bind(this) },
-          "NOT-TODO"
-        )
+        "button",
+        { onClick: function onClick() {
+            return _this3.props.onNoteAdd(_this3.state.text, _this3.state.color);
+          } },
+        "Add"
       )
     );
   };
 
-  return Input;
+  return NoteEditor;
 }(React.Component);
 
-var Todo = function (_React$Component3) {
-  _inherits(Todo, _React$Component3);
+var NotesGrid = function (_React$Component3) {
+  _inherits(NotesGrid, _React$Component3);
 
-  function Todo(props) {
-    _classCallCheck(this, Todo);
+  function NotesGrid() {
+    _classCallCheck(this, NotesGrid);
 
-    return _possibleConstructorReturn(this, _React$Component3.call(this, props));
+    return _possibleConstructorReturn(this, _React$Component3.apply(this, arguments));
   }
 
-  Todo.prototype.render = function render() {
-    var _this5 = this;
+  NotesGrid.prototype.componentDidMount = function componentDidMount() {
+    var grid = this.refs.grid;
+    this.msnry = new Masonry(grid, {
+      // options
+      itemSelector: '.note',
+      columnWidth: 200,
+      gutter: 10
+    });
+  };
 
+  NotesGrid.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
+    if (this.props.notes.length != prevProps.notes.length) {
+      this.msnry.reloadItems();
+      this.msnry.layout();
+    }
+  };
+
+  NotesGrid.prototype.render = function render() {
+    var onNoteDelete = this.props.onNoteDelete;
     return React.createElement(
       "div",
-      { className: "col-md-4 offset-md-1", id: "todo" },
-      React.createElement(
-        "h3",
-        { className: "text-center" },
-        "DO IT!"
-      ),
-      this.props.todos.map(function (todo, index) {
+      { className: "notes-grid", ref: "grid" },
+      this.props.notes.map(function (note) {
         return React.createElement(
-          "div",
-          { className: "row" },
-          React.createElement(
-            "h4",
-            { className: "animated bounceInLeft col-md-8" },
-            todo
-          ),
-          React.createElement(
-            "h5",
-            { className: "col-md-4 animated bounceInLeft", onClick: function onClick() {
-                return _this5.props.deleteItem(index);
-              } },
-            "x"
-          )
+          Note,
+          {
+            key: note.id,
+            color: note.color,
+            onDelete: onNoteDelete.bind(null, note) },
+          note.text
         );
       })
     );
   };
 
-  return Todo;
+  return NotesGrid;
 }(React.Component);
 
-var NotTodo = function (_React$Component4) {
-  _inherits(NotTodo, _React$Component4);
+var NotesApp = function (_React$Component4) {
+  _inherits(NotesApp, _React$Component4);
 
-  function NotTodo(props) {
-    _classCallCheck(this, NotTodo);
+  function NotesApp(props) {
+    _classCallCheck(this, NotesApp);
 
-    return _possibleConstructorReturn(this, _React$Component4.call(this, props));
+    var _this5 = _possibleConstructorReturn(this, _React$Component4.call(this, props));
+
+    _this5.state = { notes: [{ id: 1, text: 'DemoNote', color: 'coral' }, { id: 2, text: 'You can use Masonry with vanilla JS', color: 'aliceblue' }, { id: 3, text: 'You can initialize Masonry in HTML, without writing any JavaScript', color: 'gold' }, { id: 4, text: 'HTML initialization was previously done with a class of js-masonry and setting options in data-masonry-options in Masonry v3. Masonry v4 is backwards compatible with this code.', color: 'lightpink' }, { id: 5, text: 'Masonry v4 is backwards compatible with this code.', color: '#C9A39C' }] };
+    return _this5;
   }
 
-  NotTodo.prototype.render = function render() {
-    var _this7 = this;
+  NotesApp.prototype.componentDidMount = function componentDidMount() {
+    var localNotes = JSON.parse(localStorage.getItem('notes'));
+    if (localNotes) {
+      this.setState({ notes: localNotes });
+    }
+  };
 
+  NotesApp.prototype.updateLocalStorage = function updateLocalStorage() {
+    var notes = JSON.stringify(this.state.notes);
+    localStorage.setItem('notes', notes);
+    console.log('update ls');
+  };
+
+  NotesApp.prototype.onNoteAdd = function onNoteAdd(noteText, noteColor) {
+    var notesNew = this.state.notes.slice();
+    notesNew.unshift({ id: Date.now(), text: noteText, color: '#' + noteColor });
+    this.setState({ notes: notesNew });
+  };
+
+  NotesApp.prototype.onNoteDelete = function onNoteDelete(note) {
+    var notesNew = this.state.notes.filter(function (_note) {
+      return _note.id != note.id;
+    });
+    this.setState({ notes: notesNew });
+  };
+
+  NotesApp.prototype.componentDidUpdate = function componentDidUpdate() {
+    this.updateLocalStorage();
+  };
+
+  NotesApp.prototype.render = function render() {
     return React.createElement(
       "div",
-      { className: "col-md-4 offset-md-2", id: "nottodo" },
-      React.createElement(
-        "h3",
-        { className: "text-center" },
-        "DON'T DO IT!"
-      ),
-      this.props.nottodos.map(function (nottodo, index) {
-        return React.createElement(
-          "div",
-          { className: "row" },
-          React.createElement(
-            "h4",
-            { className: "animated bounceInRight col-md-8" },
-            nottodo
-          ),
-          React.createElement(
-            "h5",
-            { className: "col-md-4 animated bounceInRight", onClick: function onClick() {
-                return _this7.props.deleteItem(index);
-              } },
-            "x"
-          )
-        );
-      })
+      { className: "notes-app" },
+      React.createElement(NoteEditor, { onNoteAdd: this.onNoteAdd.bind(this) }),
+      React.createElement(NotesGrid, { notes: this.state.notes, onNoteDelete: this.onNoteDelete.bind(this) })
     );
   };
 
-  return NotTodo;
+  return NotesApp;
 }(React.Component);
 
-var RemoveTodo = function (_React$Component5) {
-  _inherits(RemoveTodo, _React$Component5);
-
-  function RemoveTodo() {
-    _classCallCheck(this, RemoveTodo);
-
-    return _possibleConstructorReturn(this, _React$Component5.apply(this, arguments));
-  }
-
-  return RemoveTodo;
-}(React.Component);
-
-ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+ReactDOM.render(React.createElement(NotesApp, null), document.getElementById('root'));
