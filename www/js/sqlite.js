@@ -1,471 +1,274 @@
 'use strict';
 
-var INIT_ITEMS = [{
-  name: 'Todo item 1',
-  color: '',
-  checked: false,
-  edit: false,
-  id: 1
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var toDoItems = [{
+  name: 'Click "Create" to create new task',
+  completed: false
 }, {
-  name: 'Todo item 2',
-  color: 'pink',
-  checked: false,
-  edit: false,
-  id: 2
+  name: 'Click "Edit" to edit task',
+  completetd: false
 }, {
-  name: 'Todo item 3',
-  color: 'purple',
-  checked: false,
-  edit: false,
-  id: 3
+  name: 'Click "Delete" to remove task',
+  completed: false
+}, {
+  name: "Click on task to mark as complete",
+  completed: false
 }];
 
-var COLORS = [{
-  name: 'red',
-  checked: true,
-  id: 1
-}, {
-  name: 'pink',
-  checked: false,
-  id: 2
-}, {
-  name: 'purple',
-  checked: false,
-  id: 3
-}, {
-  name: 'blue',
-  checked: false,
-  id: 4
-}, {
-  name: 'green',
-  checked: false,
-  id: 5
-}, {
-  name: 'yellow',
-  checked: false,
-  id: 6
-}];
+var CreateItem = function (_React$Component) {
+  _inherits(CreateItem, _React$Component);
 
-var itemId = 4;
+  function CreateItem() {
+    _classCallCheck(this, CreateItem);
 
-function getIndex(value, arr, prop) {
-  for (var i = 0; i < arr.length; i++) {
-    if (arr[i][prop] === value) {
-      return i;
-    }
+    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
   }
-  return -1; //to handle the case where the value doesn't exist
-}
 
-var Header = React.createClass({
-  displayName: 'Header',
-
-  propTypes: {
-    title: React.PropTypes.string.isRequired,
-    checkedItemsFlag: React.PropTypes.bool.isRequired,
-    handleDeleteItems: React.PropTypes.func.isRequired,
-    number: React.PropTypes.number
-  },
-
-  getDefaultProps: function getDefaultProps() {
-    return {
-      title: 'To do List 🐶'
-    };
-  },
-
-  handleClick: function handleClick(e) {
+  CreateItem.prototype.handleCreate = function handleCreate(e) {
     e.preventDefault();
-    this.props.handleDeleteItems();
-  },
 
-  render: function render() {
-    var showLinkClass = this.props.checkedItemsFlag ? 'is--visible' : '';
-    var number = this.props.number;
+    if (!this.refs.newItemInput.value) {
+      alert('Please enter a task name.');
+      return;
+    } else if (this.props.toDoItems.map(function (element) {
+      return element.name;
+    }).indexOf(this.refs.newItemInput.value) != -1) {
+      alert('This task already exists.');
+      this.refs.newItemInput.value = '';
+      return;
+    }
+
+    this.props.createItem(this.refs.newItemInput.value);
+    this.refs.newItemInput.value = '';
+  };
+
+  CreateItem.prototype.render = function render() {
     return React.createElement(
-      'header',
-      null,
+      'div',
+      { className: 'create-new' },
       React.createElement(
-        'h1',
-        { className: 'clearfix' },
-        this.props.title,
+        'form',
+        { onSubmit: this.handleCreate.bind(this) },
+        React.createElement('input', { type: 'text', placeholder: 'New Task', ref: 'newItemInput' }),
         React.createElement(
-          'a',
-          {
-            className: 'float--right text--xs spacer--top--xs text--reg is--hidden ' + showLinkClass,
-            href: '#',
-            onClick: this.handleClick },
-          'Clear Completed Items (',
-          number,
-          ')'
+          'button',
+          null,
+          'Create'
         )
       )
     );
-  }
-});
+  };
 
-var AddItemForm = React.createClass({
-  displayName: 'AddItemForm',
+  return CreateItem;
+}(React.Component);
 
-  propTypes: {
-    onAdd: React.PropTypes.func.isRequired,
-    colorList: React.PropTypes.array.isRequired
-  },
+var ToDoListItem = function (_React$Component2) {
+  _inherits(ToDoListItem, _React$Component2);
 
-  getInitialState: function getInitialState() {
-    return {
-      name: '',
-      color: 'red'
+  function ToDoListItem(props) {
+    _classCallCheck(this, ToDoListItem);
+
+    var _this2 = _possibleConstructorReturn(this, _React$Component2.call(this, props));
+
+    _this2.state = {
+      editing: false
     };
-  },
+    return _this2;
+  }
 
-  onSubmit: function onSubmit(e) {
-    e.preventDefault();
+  ToDoListItem.prototype.renderName = function renderName() {
+    var itemStyle = {
+      'text-decoration': this.props.completed ? 'line-through' : 'none',
+      cursor: 'pointer'
+    };
 
-    var name = this.state.name;
-    var color = this.state.color;
-
-    if (name != '') {
-      this.props.onAdd(name, color);
-      this.setState({
-        name: '',
-        color: 'red'
-      });
+    if (this.state.editing) {
+      return React.createElement(
+        'form',
+        { onSubmit: this.onSaveClick.bind(this) },
+        React.createElement('input', { type: 'text', ref: 'editInput', defaultValue: this.props.name })
+      );
     }
-  },
-
-  onNameChange: function onNameChange(e) {
-    this.state.name = e.target.value;
-    this.setState(this.state);
-  },
-
-  onColorChange: function onColorChange(e) {
-    this.state.color = e.target.getAttribute('data-color');
-    this.setState(this.state);
-  },
-
-  render: function render() {
-
-    var radios = this.props.colorList.map(function (color, index) {
-      if (this.state.color == color.name) {
-        color.checked = true;
-      } else {
-        color.checked = false;
-      }
-      var checkedClass = color.checked ? 'checked' : '';
-      return React.createElement('input', { type: 'radio', onChange: this.onColorChange, className: 'colorSelector__inputRadio ' + color.name + ' ' + checkedClass, name: 'selectedColor', 'data-color': color.name, key: color.id });
-    }.bind(this));
 
     return React.createElement(
-      'form',
-      { onSubmit: this.onSubmit },
-      React.createElement('input', { className: 'form__inputText--lg form__inputText--addItem', type: 'text', name: 'name', value: this.state.name, onChange: this.onNameChange, placeholder: 'Add New Item' }),
-      React.createElement(
-        'div',
-        { className: 'colorSelector' },
-        radios
-      ),
-      React.createElement('input', { className: 'form__inputSubmit--inside', type: 'submit', value: 'Add' })
+      'span',
+      { style: itemStyle, onClick: this.props.toggleComplete.bind(this, this.props.name) },
+      this.props.name
     );
-  }
-});
+  };
 
-var EditItemForm = React.createClass({
-  displayName: 'EditItemForm',
-
-  propTypes: {
-    editMode: React.PropTypes.bool.isRequired,
-    val: React.PropTypes.string.isRequired,
-    colorList: React.PropTypes.array.isRequired,
-    color: React.PropTypes.string
-  },
-
-  getInitialState: function getInitialState() {
-    return {
-      newName: this.props.val,
-      newColor: this.props.color
-    };
-  },
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    if (nextProps.editMode === false) {
-      this.setState({
-        newName: nextProps.val,
-        newColor: nextProps.color
-      });
-    }
-  },
-  onValueChange: function onValueChange(e) {
-    this.state.newName = e.target.value;
-    this.setState(this.state);
-  },
-  onColorChange: function onColorChange(e) {
-    this.state.newColor = e.target.getAttribute('data-color');
-    this.setState(this.state);
-  },
-  onSubmit: function onSubmit(e) {
-    e.preventDefault();
-
-    var name = this.state.newName;
-    var color = this.state.newColor;
-    var id = this.props.id;
-
-    if (name != '') {
-      this.props.notifyEdits(name, color, id);
-    }
-  },
-  render: function render() {
-    var editClass = this.props.editMode ? 'is--show' : '';
-
-    var radios = this.props.colorList.map(function (color, index) {
-
-      var checkedClass = color.name == this.state.newColor ? 'checked' : '';
-
-      return React.createElement('input', { type: 'radio', onChange: this.onColorChange, className: 'colorSelector__inputRadio ' + color.name + ' ' + checkedClass, name: 'selectedColor', 'data-color': color.name, key: color.id });
-    }.bind(this));
-
-    return React.createElement(
-      'form',
-      { className: 'list__form ' + editClass, onSubmit: this.onSubmit },
-      React.createElement('input', {
-        className: 'form__inputText--lg form__inputText--addItem',
-        type: 'text',
-        ref: 'editInput',
-        onChange: this.onValueChange,
-        value: this.state.newName
-      }),
-      React.createElement(
-        'div',
-        { className: 'colorSelector' },
-        radios
-      ),
-      React.createElement('input', { className: 'form__inputSubmit--inside', type: 'submit', value: 'Save' })
-    );
-  }
-});
-
-var Item = React.createClass({
-  displayName: 'Item',
-
-  propTypes: {
-    name: React.PropTypes.string.isRequired,
-    color: React.PropTypes.string,
-    checked: React.PropTypes.bool.isRequired,
-    edit: React.PropTypes.bool.isRequired,
-    id: React.PropTypes.number.isRequired,
-    onPassDelete: React.PropTypes.func.isRequired,
-    onCheckedCheck: React.PropTypes.func.isRequired,
-    editFlag: React.PropTypes.func.isRequired,
-    editColorList: React.PropTypes.array.isRequired
-  },
-
-  getInitialState: function getInitialState() {
-    return {
-      clicked: false,
-      checked: false,
-      editSwitch: false
-    };
-  },
-
-  handleClick: function handleClick() {
-    this.state.clicked = this.state.clicked ? false : true;
-    this.setState(this.state);
-  },
-
-  handleChange: function handleChange(e) {
-    this.state.checked = e.target.checked;
-    this.props.onCheckedCheck(this.state.checked, this.props.id);
-    this.setState(this.state);
-  },
-
-  onEditSwitch: function onEditSwitch() {
-    this.state.editSwitch = true;
-    this.setState(this.state);
-    this.props.editFlag(this.state.editSwitch, this.props.id);
-  },
-
-  render: function render() {
-    var colorClass = this.props.color ? this.props.color : '';
-    var checkedClass = this.state.checked ? 'disabled' : '';
-
-    return React.createElement(
-      'li',
-      { className: 'list__item ' + colorClass + ' ' + checkedClass, 'data-id': this.props.id },
-      React.createElement(
-        'div',
-        { className: 'list__checkbox' },
-        React.createElement('input', { type: 'checkbox', onChange: this.handleChange })
-      ),
-      React.createElement(
-        'div',
-        { className: 'list__name' },
+  ToDoListItem.prototype.renderButtons = function renderButtons() {
+    if (this.state.editing) {
+      return React.createElement(
+        'span',
+        null,
         React.createElement(
-          'p',
-          { className: 'list__text', onClick: this.onEditSwitch },
-          this.props.name
+          'button',
+          { onClick: this.onSaveClick.bind(this) },
+          'Save'
         ),
-        React.createElement(EditItemForm, {
-          editMode: this.props.edit,
-          val: this.props.name,
-          color: this.props.color,
-          colorList: this.props.editColorList,
-          notifyEdits: this.props.onEdit,
-          id: this.props.id
-        })
+        React.createElement(
+          'button',
+          { onClick: this.onCancelClick.bind(this) },
+          'Cancel'
+        )
+      );
+    }
+
+    return React.createElement(
+      'span',
+      null,
+      React.createElement(
+        'button',
+        { onClick: this.onEditClick.bind(this) },
+        'Edit'
+      ),
+      React.createElement(
+        'button',
+        { onClick: this.props.deleteItem.bind(this, this.props.name) },
+        'Delete'
       )
     );
-  }
-});
+  };
 
-var App = React.createClass({
-  displayName: 'App',
+  ToDoListItem.prototype.onEditClick = function onEditClick() {
+    this.setState({ editing: true });
+  };
 
-  propTypes: {
-    initialItems: React.PropTypes.array.isRequired,
-    colors: React.PropTypes.array.isRequired
-  },
+  ToDoListItem.prototype.onCancelClick = function onCancelClick() {
+    this.setState({ editing: false });
+  };
 
-  componentDidMount: function componentDidMount() {
-    window.addEventListener('click', this.clickOutside);
-  },
+  ToDoListItem.prototype.onSaveClick = function onSaveClick(e) {
+    e.preventDefault();
+    this.props.saveItem(this.props.name, this.refs.editInput.value);
+    this.setState({ editing: false });
+  };
 
-  getInitialState: function getInitialState() {
-    return {
-      items: this.props.initialItems,
-      countChecked: false,
-      checkedNum: 1
-    };
-  },
-
-  onItemAdd: function onItemAdd(name, color) {
-    this.state.items.push({
-      name: name,
-      color: color,
-      checked: false,
-      edit: false,
-      id: itemId
-    });
-    this.setState(this.state);
-    itemId += 1;
-  },
-
-  onItemEdit: function onItemEdit(name, color, id) {
-    var array = this.state.items;
-    var index = getIndex(id, array, 'id');
-    this.state.items[index].name = name;
-    this.state.items[index].color = color;
-    this.state.items[index].edit = false;
-    this.setState(this.state);
-    //console.log('new name: ' + name + ' new color: ' + color + ' id: ' + id);
-  },
-
-  onItemDelete: function onItemDelete(index) {
-    this.state.items.splice(index, 1);
-    this.setState(this.state);
-  },
-
-  onCheckedChecker: function onCheckedChecker(checked, id) {
-    var array = this.state.items;
-    var index = getIndex(id, array, 'id');
-    var counter = [];
-
-    if (this.state.items[index].edit === true) {
-      this.state.items[index].edit = false;
-    }
-    this.state.items[index].checked = checked;
-    this.setState(this.state);
-
-    this.state.items.forEach(function (obj, index) {
-      if (obj.checked === true) {
-        counter.push(obj);
-      }
-    });
-    if (counter.length > 0) {
-      this.state.countChecked = true;
-    } else {
-      this.state.countChecked = false;
-    }
-    this.state.checkedNum = counter.length;
-  },
-
-  onMultiDelete: function onMultiDelete() {
-    var items = this.state.items;
-    var keep = [];
-    this.state.items.forEach(function (obj, index) {
-      if (obj.checked !== true) {
-        keep.push(items[index]);
-      }
-    });
-    this.setState({
-      items: keep,
-      countChecked: false,
-      checkedNum: 1
-    });
-  },
-
-  onEditCheck: function onEditCheck(flag, id) {
-    var array = this.state.items;
-    var index = getIndex(id, array, 'id');
-    var counter = [];
-
-    this.state.items[index].edit = flag;
-    this.setState(this.state);
-
-    this.state.items.forEach(function (obj, index) {
-      if (obj.edit === true) {
-        counter.push(obj);
-      }
-    });
-
-    if (counter.length > 1) {
-      this.state.items.forEach(function (obj, index) {
-        obj.edit = false;
-      });
-      this.state.items[index].edit = true;
-      this.setState(this.state);
-
-      counter.splice(0, 1);
-    }
-  },
-
-  clickOutside: function clickOutside(e) {
-    if (!document.querySelector('[data-area]').contains(e.target)) {
-      this.state.items.forEach(function (obj, index) {
-        if (obj.edit === true) {
-          obj.edit = false;
-        }
-      });
-      this.setState(this.state);
-    }
-  },
-
-  render: function render() {
+  ToDoListItem.prototype.render = function render() {
     return React.createElement(
       'div',
-      { className: 'container' },
-      React.createElement(Header, { checkedItemsFlag: this.state.countChecked, number: this.state.checkedNum, handleDeleteItems: this.onMultiDelete }),
+      { className: 'to-do-item' },
       React.createElement(
-        'ul',
-        { className: 'list', 'data-area': true },
-        this.state.items.map(function (item, index) {
-          return React.createElement(Item, {
-            name: item.name,
-            color: item.color,
-            checked: item.checked,
-            edit: item.edit,
-            key: item.id,
-            id: item.id,
-            onCheckedCheck: this.onCheckedChecker,
-            onPassDelete: function () {
-              this.onItemDelete(index);
-            }.bind(this),
-            editFlag: this.onEditCheck,
-            editColorList: this.props.colors,
-            onEdit: this.onItemEdit
-          });
-        }.bind(this))
+        'span',
+        { className: 'name' },
+        this.renderName()
       ),
-      React.createElement(AddItemForm, { onAdd: this.onItemAdd, colorList: this.props.colors })
+      React.createElement(
+        'span',
+        { className: 'actions' },
+        this.renderButtons()
+      )
     );
-  }
-});
+  };
 
-ReactDOM.render(React.createElement(App, { initialItems: INIT_ITEMS, colors: COLORS }), document.getElementById('app'));
+  return ToDoListItem;
+}(React.Component);
+
+var ToDoList = function (_React$Component3) {
+  _inherits(ToDoList, _React$Component3);
+
+  function ToDoList() {
+    _classCallCheck(this, ToDoList);
+
+    return _possibleConstructorReturn(this, _React$Component3.apply(this, arguments));
+  }
+
+  ToDoList.prototype.renderItems = function renderItems() {
+    var _this4 = this;
+
+    return this.props.toDoItems.map(function (item, index) {
+      return React.createElement(ToDoListItem, _extends({ key: index }, item, _this4.props));
+    });
+  };
+
+  ToDoList.prototype.render = function render() {
+    return React.createElement(
+      'div',
+      { className: 'items-list' },
+      this.renderItems()
+    );
+  };
+
+  return ToDoList;
+}(React.Component);
+
+var App = function (_React$Component4) {
+  _inherits(App, _React$Component4);
+
+  function App(props) {
+    _classCallCheck(this, App);
+
+    var _this5 = _possibleConstructorReturn(this, _React$Component4.call(this, props));
+
+    _this5.state = {
+      toDoItems: toDoItems
+    };
+    return _this5;
+  }
+
+  App.prototype.createItem = function createItem(item) {
+    this.state.toDoItems.unshift({
+      name: item,
+      completed: false
+    });
+    this.setState({
+      toDoItems: this.state.toDoItems
+    });
+  };
+
+  App.prototype.findItem = function findItem(item) {
+    return this.state.toDoItems.filter(function (element) {
+      return element.name === item;
+    })[0];
+  };
+
+  App.prototype.toggleComplete = function toggleComplete(item) {
+    var selectedItem = this.findItem(item);
+    selectedItem.completed = !selectedItem.completed;
+    this.setState({ toDoItems: this.state.toDoItems });
+  };
+
+  App.prototype.saveItem = function saveItem(oldItem, newItem) {
+    var selectedItem = this.findItem(oldItem);
+    selectedItem.name = newItem;
+    this.setState({ toDoItems: this.state.toDoItems });
+  };
+
+  App.prototype.deleteItem = function deleteItem(item) {
+    var index = this.state.toDoItems.map(function (element) {
+      return element.name;
+    }).indexOf(item);
+    this.state.toDoItems.splice(index, 1);
+    this.setState({ toDoItems: this.state.toDoItems });
+  };
+
+  App.prototype.render = function render() {
+    return React.createElement(
+      'div',
+      { className: 'to-do-app' },
+      React.createElement(
+        'div',
+        { className: 'header' },
+        React.createElement(
+          'h1',
+          null,
+          'ToDo List'
+        )
+      ),
+      React.createElement(CreateItem, { toDoItems: this.state.toDoItems, createItem: this.createItem.bind(this) }),
+      React.createElement(ToDoList, { toDoItems: this.state.toDoItems, deleteItem: this.deleteItem.bind(this), saveItem: this.saveItem.bind(this), toggleComplete: this.toggleComplete.bind(this) })
+    );
+  };
+
+  return App;
+}(React.Component);
+
+ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
