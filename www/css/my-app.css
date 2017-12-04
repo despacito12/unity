@@ -1,99 +1,133 @@
 body {
+  background: #7E9FE1;
+  font-family: 'Raleway', sans-serif;
+}
+
+.container {
+  align-items: center;
+  display: flex;
   height: 100vh;
-  background: #4D78D1;
+  justify-content: center;
 }
 
-form {
-  display: inline;
-}
-
-button {
-  margin: 3px;
-  cursor: pointer;
-}
-
-.to-do-app {
-  box-sizing: border-box;
-  width: 550px;
-  margin: 50px auto 0 auto;
-  text-align: center;
+.card {
+  background: white;
+  border: 1px solid #aaa;
   border-radius: 5px;
-  box-shadow: 0 0 5px #252525;
+  display: flex;
+  flex-flow: column wrap;
+  flex: 0 0 350px;
+  height: 400px;
+  overflow: hidden;
+  box-shadow: 0px 65px 100px -45px rgba(0, 0, 0, 0.3);
 }
 
 .header {
-  background: #444;
-  padding: 7px;
-  border-radius: 3px 3px 0 0;
-}
-.header h1 {
-  font-size: 36px;
-  margin: 0;
-  color: white;
-  font-weight: lighter;
+  background: #02D8FF;
+  color: #4F596C;
+  font-size: 30px;
+  font-weight: 200;
+  padding: 10px;
+  text-align: center;
 }
 
-.create-new {
-  border-top: 1px solid #777;
+.main {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.footer {
+  align-items: center;
+  border-top: 1px solid #aaa;
+  box-sizing: border-box;
+  display: flex;
+  height: 50px;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0px 10px;
+}
+.footer form {
+  display: flex;
   width: 100%;
 }
-.create-new input {
-  box-sizing: border-box;
-  width: 75%;
-  padding: 10px;
-  font-size: 18px;
-  border: none;
+.footer .footer_input {
+  border: 1px solid #02D8FF;
+  border-radius: 4px 0px 0px 4px;
+  flex: 1;
 }
-.create-new button {
-  width: 25%;
-  background: #eee;
-  box-sizing: border-box;
-  padding: 10px;
-  font-size: 18px;
-  margin: 0;
-  border: none;
-  border-left: 1px solid #999;
-}
-.create-new button:hover {
-  background: #ddd;
+.footer .add_btn {
+  background: #02D8FF;
+  border-radius: 0px 4px 4px 0px;
+  font-weight: bold;
+  height: 30px;
+  width: 100px;
 }
 
-.items-list {
-  background: #2AB2EE ;
-  border-radius: 3px;
+.list {
+  box-sizing: border-box;
+  padding: 10px;
 }
 
-.to-do-item {
-  padding: 10px 0 10px 0;
-  margin: 1px 0 1px 0;
-  border-top: 1px solid #08363b;
-  display: flex;
-  justify-content: space-between;
+.list_item {
   align-items: center;
-  font-size: 18px;
-  color: white;
-  font-weight: lighter;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  padding: 10px;
 }
-
-.name {
+.list_item label {
+  flex: 1;
+  font-size: 14px;
   margin-left: 10px;
 }
-.name input {
-  width: 350px;
-  color: #333;
-  padding: 5px;
-  border: none;
-  border-radius: 1px;
+.list_item .item_input {
+  border-radius: 2px;
+  border: 1px solid #aaa;
+  flex: 1;
+  height: 20px;
+  margin-right: 5px;
+  width: 0px;
 }
 
-.actions {
-  margin-right: 10px;
-}
-.actions button {
-  padding: 7px;
-  border-radius: 2px;
+.btn {
   border: none;
-  background: #333;
   color: white;
-  font-weight: lighter;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.color_btn {
+  box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
+  height: 20px;
+  min-width: 20px;
+  margin-right: 5px;
+}
+
+.delete_btn {
+  background: #ff7f68;
+  padding: 2px;
+}
+
+.edit_btn {
+  background: orange;
+  margin-right: 5px;
+  padding: 2px;
+}
+
+.checked {
+  color: #666;
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+.extra_features {
+  display: flex;
+}
+
+.export_btn, .import_btn {
+  background: #02D8FF;
+  flex: 1;
+}
+.export_btn:hover, .import_btn:hover {
+  background: #35e0ff;
 }
