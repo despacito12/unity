@@ -1,6 +1,4 @@
-'use strict';
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+"use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8,267 +6,282 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var toDoItems = [{
-  name: 'Click "Create" to create new task',
-  completed: false
-}, {
-  name: 'Click "Edit" to edit task',
-  completetd: false
-}, {
-  name: 'Click "Delete" to remove task',
-  completed: false
-}, {
-  name: "Click on task to mark as complete",
-  completed: false
-}];
+var Cardheader = function (_React$Component) {
+  _inherits(Cardheader, _React$Component);
 
-var CreateItem = function (_React$Component) {
-  _inherits(CreateItem, _React$Component);
-
-  function CreateItem() {
-    _classCallCheck(this, CreateItem);
+  function Cardheader() {
+    _classCallCheck(this, Cardheader);
 
     return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
   }
 
-  CreateItem.prototype.handleCreate = function handleCreate(e) {
-    e.preventDefault();
-
-    if (!this.refs.newItemInput.value) {
-      alert('Please enter a task name.');
-      return;
-    } else if (this.props.toDoItems.map(function (element) {
-      return element.name;
-    }).indexOf(this.refs.newItemInput.value) != -1) {
-      alert('This task already exists.');
-      this.refs.newItemInput.value = '';
-      return;
-    }
-
-    this.props.createItem(this.refs.newItemInput.value);
-    this.refs.newItemInput.value = '';
-  };
-
-  CreateItem.prototype.render = function render() {
+  Cardheader.prototype.render = function render() {
     return React.createElement(
-      'div',
-      { className: 'create-new' },
+      "div",
+      { className: "header" },
       React.createElement(
-        'form',
-        { onSubmit: this.handleCreate.bind(this) },
-        React.createElement('input', { type: 'text', placeholder: 'New Task', ref: 'newItemInput' }),
-        React.createElement(
-          'button',
-          null,
-          'Create'
-        )
+        "h1",
+        { className: "heading" },
+        this.props.text
       )
     );
   };
 
-  return CreateItem;
+  return Cardheader;
 }(React.Component);
 
-var ToDoListItem = function (_React$Component2) {
-  _inherits(ToDoListItem, _React$Component2);
+var Listitem = function (_React$Component2) {
+  _inherits(Listitem, _React$Component2);
 
-  function ToDoListItem(props) {
-    _classCallCheck(this, ToDoListItem);
+  function Listitem(props) {
+    _classCallCheck(this, Listitem);
 
     var _this2 = _possibleConstructorReturn(this, _React$Component2.call(this, props));
 
-    _this2.state = {
-      editing: false
-    };
+    var localStorageObject = JSON.parse(localStorage.getItem(_this2.props.item));
+    _this2.state = localStorageObject || { class: "", text: "", checked: false, edit: false, color: 'white' };
     return _this2;
   }
 
-  ToDoListItem.prototype.renderName = function renderName() {
-    var itemStyle = {
-      'text-decoration': this.props.completed ? 'line-through' : 'none',
-      cursor: 'pointer'
-    };
-
-    if (this.state.editing) {
-      return React.createElement(
-        'form',
-        { onSubmit: this.onSaveClick.bind(this) },
-        React.createElement('input', { type: 'text', ref: 'editInput', defaultValue: this.props.name })
-      );
-    }
-
-    return React.createElement(
-      'span',
-      { style: itemStyle, onClick: this.props.toggleComplete.bind(this, this.props.name) },
-      this.props.name
-    );
+  Listitem.prototype.componentDidUpdate = function componentDidUpdate() {
+    localStorage.setItem(this.props.item, JSON.stringify({
+      class: this.state.class,
+      text: "",
+      checked: this.state.checked,
+      edit: false,
+      color: this.state.color
+    }));
   };
 
-  ToDoListItem.prototype.renderButtons = function renderButtons() {
-    if (this.state.editing) {
-      return React.createElement(
-        'span',
-        null,
-        React.createElement(
-          'button',
-          { onClick: this.onSaveClick.bind(this) },
-          'Save'
-        ),
-        React.createElement(
-          'button',
-          { onClick: this.onCancelClick.bind(this) },
-          'Cancel'
-        )
-      );
-    }
+  Listitem.prototype.toggleItem = function toggleItem(e) {
+    this.setState({ checked: e.target.checked });
+    var newClass = e.target.checked === true ? "checked" : "";
+    this.setState({ class: newClass });
+  };
 
+  Listitem.prototype.toggleEdit = function toggleEdit(e) {
+    if (this.state.edit) {
+      this.props.onEdit(this.props.item, this.state.text);
+    }
+    this.setState({ edit: !this.state.edit, text: this.props.item });
+    e.target.innerText = e.target.innerText == "Edit" ? "Done" : "Edit";
+  };
+
+  Listitem.prototype.handleChange = function handleChange(e) {
+    this.setState({ text: e.target.value });
+  };
+
+  Listitem.prototype.handleDelete = function handleDelete(e) {
+    this.props.onDelete(this.props.id);
+  };
+
+  Listitem.prototype.finishEdit = function finishEdit(e) {
+    if (e.keyCode == 13) {
+      this.setState({ edit: !this.state.edit });
+      this.props.onEdit(this.props.item, this.state.text);
+    }
+  };
+
+  Listitem.prototype.changeColor = function changeColor(e) {
+    var colors = ['white', '#02ff67', '#ff0000', '#ffa202', '#02d8ff', '#ab3cc4'];
+    var newColor = colors[colors.indexOf(this.state.color) + 1] || colors[0];
+    this.setState({ color: newColor });
+  };
+
+  Listitem.prototype.render = function render() {
+    var text = React.createElement(
+      "label",
+      { className: this.state.class },
+      this.props.item
+    );
+    if (this.state.edit) {
+      text = React.createElement("input", { type: "textbox", className: "item_input",
+        value: this.state.text, onChange: this.handleChange.bind(this),
+        onKeyDown: this.finishEdit.bind(this) });
+    }
     return React.createElement(
-      'span',
-      null,
+      "li",
+      { className: "list_item", style: { background: this.state.color } },
+      React.createElement("input", { onChange: this.toggleItem.bind(this), checked: this.state.checked,
+        type: "checkbox", style: { display: this.state.edit ? 'none' : 'block' } }),
+      text,
+      React.createElement("button", { className: "color_btn btn", onClick: this.changeColor.bind(this),
+        style: { background: this.state.color } }),
       React.createElement(
-        'button',
-        { onClick: this.onEditClick.bind(this) },
-        'Edit'
+        "button",
+        { className: "edit_btn btn", onClick: this.toggleEdit.bind(this) },
+        "Edit"
       ),
       React.createElement(
-        'button',
-        { onClick: this.props.deleteItem.bind(this, this.props.name) },
-        'Delete'
+        "button",
+        { className: "delete_btn btn", onClick: this.handleDelete.bind(this) },
+        "Delete"
       )
     );
   };
 
-  ToDoListItem.prototype.onEditClick = function onEditClick() {
-    this.setState({ editing: true });
-  };
-
-  ToDoListItem.prototype.onCancelClick = function onCancelClick() {
-    this.setState({ editing: false });
-  };
-
-  ToDoListItem.prototype.onSaveClick = function onSaveClick(e) {
-    e.preventDefault();
-    this.props.saveItem(this.props.name, this.refs.editInput.value);
-    this.setState({ editing: false });
-  };
-
-  ToDoListItem.prototype.render = function render() {
-    return React.createElement(
-      'div',
-      { className: 'to-do-item' },
-      React.createElement(
-        'span',
-        { className: 'name' },
-        this.renderName()
-      ),
-      React.createElement(
-        'span',
-        { className: 'actions' },
-        this.renderButtons()
-      )
-    );
-  };
-
-  return ToDoListItem;
+  return Listitem;
 }(React.Component);
 
-var ToDoList = function (_React$Component3) {
-  _inherits(ToDoList, _React$Component3);
+var Cardmain = function (_React$Component3) {
+  _inherits(Cardmain, _React$Component3);
 
-  function ToDoList() {
-    _classCallCheck(this, ToDoList);
+  function Cardmain() {
+    _classCallCheck(this, Cardmain);
 
     return _possibleConstructorReturn(this, _React$Component3.apply(this, arguments));
   }
 
-  ToDoList.prototype.renderItems = function renderItems() {
+  Cardmain.prototype.render = function render() {
     var _this4 = this;
 
-    return this.props.toDoItems.map(function (item, index) {
-      return React.createElement(ToDoListItem, _extends({ key: index }, item, _this4.props));
+    var list = this.props.items.map(function (item, i) {
+      return React.createElement(Listitem, { item: item, id: i, key: item, onDelete: _this4.props.onDelete, onEdit: _this4.props.onEdit });
     });
-  };
-
-  ToDoList.prototype.render = function render() {
     return React.createElement(
-      'div',
-      { className: 'items-list' },
-      this.renderItems()
+      "div",
+      { className: "main" },
+      React.createElement(
+        "ul",
+        null,
+        list
+      )
     );
   };
 
-  return ToDoList;
+  return Cardmain;
 }(React.Component);
 
-var App = function (_React$Component4) {
-  _inherits(App, _React$Component4);
+var Cardfooter = function (_React$Component4) {
+  _inherits(Cardfooter, _React$Component4);
 
-  function App(props) {
-    _classCallCheck(this, App);
+  function Cardfooter() {
+    _classCallCheck(this, Cardfooter);
 
-    var _this5 = _possibleConstructorReturn(this, _React$Component4.call(this, props));
-
-    _this5.state = {
-      toDoItems: toDoItems
-    };
-    return _this5;
+    return _possibleConstructorReturn(this, _React$Component4.apply(this, arguments));
   }
 
-  App.prototype.createItem = function createItem(item) {
-    this.state.toDoItems.unshift({
-      name: item,
-      completed: false
-    });
-    this.setState({
-      toDoItems: this.state.toDoItems
-    });
-  };
-
-  App.prototype.findItem = function findItem(item) {
-    return this.state.toDoItems.filter(function (element) {
-      return element.name === item;
-    })[0];
-  };
-
-  App.prototype.toggleComplete = function toggleComplete(item) {
-    var selectedItem = this.findItem(item);
-    selectedItem.completed = !selectedItem.completed;
-    this.setState({ toDoItems: this.state.toDoItems });
-  };
-
-  App.prototype.saveItem = function saveItem(oldItem, newItem) {
-    var selectedItem = this.findItem(oldItem);
-    selectedItem.name = newItem;
-    this.setState({ toDoItems: this.state.toDoItems });
-  };
-
-  App.prototype.deleteItem = function deleteItem(item) {
-    var index = this.state.toDoItems.map(function (element) {
-      return element.name;
-    }).indexOf(item);
-    this.state.toDoItems.splice(index, 1);
-    this.setState({ toDoItems: this.state.toDoItems });
-  };
-
-  App.prototype.render = function render() {
+  Cardfooter.prototype.render = function render() {
     return React.createElement(
-      'div',
-      { className: 'to-do-app' },
+      "div",
+      { className: "footer" },
       React.createElement(
-        'div',
-        { className: 'header' },
+        "form",
+        null,
+        React.createElement("input", { className: "footer_input", type: "text", onChange: this.props.onChange, value: this.props.value }),
         React.createElement(
-          'h1',
-          null,
-          'ToDo List'
+          "button",
+          { className: "add_btn btn", type: "submit", onClick: this.props.onClick },
+          "Add"
         )
-      ),
-      React.createElement(CreateItem, { toDoItems: this.state.toDoItems, createItem: this.createItem.bind(this) }),
-      React.createElement(ToDoList, { toDoItems: this.state.toDoItems, deleteItem: this.deleteItem.bind(this), saveItem: this.saveItem.bind(this), toggleComplete: this.toggleComplete.bind(this) })
+      )
     );
   };
 
-  return App;
+  return Cardfooter;
 }(React.Component);
 
-ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+var Extrafeatures = function (_React$Component5) {
+  _inherits(Extrafeatures, _React$Component5);
+
+  function Extrafeatures() {
+    _classCallCheck(this, Extrafeatures);
+
+    return _possibleConstructorReturn(this, _React$Component5.apply(this, arguments));
+  }
+
+  Extrafeatures.prototype.render = function render() {
+    return React.createElement(
+      "div",
+      { className: "extra_features" },
+      React.createElement(
+        "button",
+        { className: "export_btn btn", onClick: this.props.onExport },
+        "Export"
+      ),
+      React.createElement("input", { type: "file", className: "import_btn btn", onChange: this.props.onImport })
+    );
+  };
+
+  return Extrafeatures;
+}(React.Component);
+
+var Card = function (_React$Component6) {
+  _inherits(Card, _React$Component6);
+
+  function Card(props) {
+    _classCallCheck(this, Card);
+
+    var _this7 = _possibleConstructorReturn(this, _React$Component6.call(this, props));
+
+    _this7.state = { text: '', items: localStorage.getItem('items') ? localStorage.getItem('items').split(',') : ['item'] };
+    return _this7;
+  }
+
+  Card.prototype.addItem = function addItem(e) {
+    e.preventDefault();
+    //no duplicate items in list.
+    if (this.state.items.indexOf(this.state.text) == -1 && this.state.text != '') {
+      //concat returns new array vs push which alters original
+      this.setState({ items: this.state.items.concat(this.state.text),
+        text: '' });
+    } else {
+      this.setState({ text: '' });
+    }
+  };
+
+  Card.prototype.componentDidUpdate = function componentDidUpdate() {
+    localStorage.setItem('items', this.state.items);
+  };
+
+  Card.prototype.detectChange = function detectChange(e) {
+    this.setState({ text: e.target.value });
+  };
+
+  Card.prototype.handleDelete = function handleDelete(item_id) {
+    if (this.state.items[item_id]) {
+      localStorage.removeItem(this.state.items[item_id]);
+      var temp_items = [].concat(this.state.items);
+      temp_items.splice([item_id], 1);
+      this.setState({ items: temp_items });
+    }
+  };
+
+  Card.prototype.handleEdit = function handleEdit(item, newItem) {
+    //Make sure the edit creates no duplicates in list.
+    if (this.state.items.indexOf(newItem) == -1 && newItem != '') {
+      localStorage.removeItem(this.state.items[this.state.items.indexOf(item)]);
+      this.state.items[this.state.items.indexOf(item)] = newItem;
+      this.setState({ items: this.state.items });
+    }
+  };
+
+  Card.prototype.export = function _export() {
+    var items = [].concat(this.state.items);
+    var list = items.reduce(function (obj, item) {
+      obj[item] = localStorage.getItem(item);
+      return obj;
+    }, {});
+    var blob = new Blob([JSON.stringify(list)], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, 'exportedList.txt');
+  };
+
+  Card.prototype.import = function _import(e) {
+    console.log("Coming soon");
+  };
+
+  Card.prototype.render = function render() {
+    return React.createElement(
+      "div",
+      { className: "card" },
+      React.createElement(Cardheader, { text: "My ToDo App" }),
+      React.createElement(Cardmain, { items: this.state.items, onDelete: this.handleDelete.bind(this), onEdit: this.handleEdit.bind(this) }),
+      React.createElement(Cardfooter, { onClick: this.addItem.bind(this), value: this.state.text, onChange: this.detectChange.bind(this) }),
+      React.createElement(Extrafeatures, { onExport: this.export.bind(this), onImport: this.import.bind(this) })
+    );
+  };
+
+  return Card;
+}(React.Component);
+
+ReactDOM.render(React.createElement(Card, null), document.querySelector(".container"));
