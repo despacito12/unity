@@ -1,198 +1,47 @@
-
-
-@-webkit-keyframes no-anim {}
-@-webkit-keyframes move-up1 {
-  0% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-  100% {
-    -webkit-transform: translate(0px, -100px);
-    transform: translate(0px, -100px);
-  }
+html {
+ 
+  background-color: #66ccff;
 }
-@keyframes move-up1 {
-  0% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-  100% {
-    -webkit-transform: translate(0px, -100px);
-    transform: translate(0px, -100px);
-  }
+.title {
+  padding-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-@-webkit-keyframes move-down1 {
-  0% {
-    -webkit-transform: translate(0px, -100px);
-    transform: translate(0px, -100px);
-  }
-  100% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
-@keyframes move-down1 {
-  0% {
-    -webkit-transform: translate(0px, -100px);
-    transform: translate(0px, -100px);
-  }
-  100% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
+.input {
+  width: 100px;
 }
-@-webkit-keyframes move-up {
-  0% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-  100% {
-    -webkit-transform: translate(0px, -500px);
-    transform: translate(0px, -500px);
-  }
+.button {
+  margin-left: 11px;
 }
-@keyframes move-up {
-  0% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-  100% {
-    -webkit-transform: translate(0px, -500px);
-    transform: translate(0px, -500px);
-  }
-}
-@-webkit-keyframes move-down {
-  0% {
-    -webkit-transform: translate(0px, -500px);
-    transform: translate(0px, -500px);
-  }
-  100% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-}
-@keyframes move-down {
-  0% {
-    -webkit-transform: translate(0px, -500px);
-    transform: translate(0px, -500px);
-  }
-  100% {
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-}
-#bg{
-  background-color:#69A8A0 ;
-}
-
-#content {
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #82cdff;
+  margin: 5px;
+  padding: 5px;
+  border: blue 1px solid;
+  color: black;
   max-width: 500px;
-  margin: auto;
-  text-align: center;
-  z-index: 1;
-  position: relative;
-  padding-top: 120px;
+  flex-wrap: wrap;
 }
-
-#popup {
-  margin: 5% auto;
-  padding: 2%;
-  z-index: 99;
-  min-width: 290px;
-  max-width: 450px;
-  background-color: #FFF;
-  border-radius: 10px;
-  border: 10px solid #FFF;
-  -webkit-animation: no-anim 0.35s linear 0s forwards;
-  animation: no-anim 0.35s linear 0s forwards;
-
+.checkbox input{
+  height: 20px;
+  width: 20px;
 }
-#popup input, #popup textarea {
-  border-radius: 5px;
-  border: 3px solid #000;
-  padding: 2%;
-  min-width: 100%;
+.struck {
+  text-decoration: line-through;
+  flex-wrap: wrap;
 }
-#popup #edits {
-  margin-top: 1%;
-  min-height: 50px;
-}
-
-#hiddenpop {
-  display: none;
-  margin: auto;
-  z-index: 99;
-  position: absolute;
-  width: 96vw;
-  height: 96vh;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-#hiddenpop .btn {
-  margin: 1% 2% 0% 0%;
-}
-
-strong {
-  margin: 0% 0% 8% 0%;
-}
-
-#welcome {
-  border-bottom: 5px solid #000;
-  padding: 2%;
-  z-index: 99;
-  background-color: #FFF;
-}
-
-#info {
-  -webkit-animation: no-anim 0.8s linear 0s forwards;
-  animation: no-anim 0.8s linear 0s forwards;
-  z-index: -1;
-  background-color: #FFF;
-}
-
-#recipe div {
-  width: 100%;
-  padding: 2%;
-  text-align: left;
-  margin-top: 2%;
-  background-color: transparent;
-  border-radius: 10px;
-  border: 5px solid #000;
-}
-#recipe div:hover {
-  background-color: #000;
-  color: #FFF;
-}
-#recipe span {
-  display: block;
-  margin: 0%;
-}
-#recipe #edit {
-  min-height: 50px;
-}
-
-#moving {
-  z-index: -10;
-  -webkit-animation: no-anim 0.2s linear 0s alternate;
-  animation: no-anim 0.2s linear 0s alternate;
-}
-
-button {
-  display: inline-block;
-  margin: 2% 2% 0% 0%;
-  float: center;
-  border-radius: 5%;
-}
-
-.btn {
-  display: inline-block;
-}
-
-.show {
-  padding: 2%;
-  text-align: left;
-  margin-top: 1%;
-  border-bottom: 5px solid #000;
-  -webkit-animation: no-anim 2s linear 0s alternate;
-  animation: no-anim 2s linear 0s alternate;
+.unstruck {
+  text-decoration: none;
+  font-weight: bold;
+  flex-wrap: wrap;
 }
